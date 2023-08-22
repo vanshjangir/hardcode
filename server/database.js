@@ -34,12 +34,12 @@ async function connectToDatabase() {
   try {
     await client.connect();
     console.log('Connected to MongoDB');
-    const db = client.db('your-database-name');
+    const db = client.db('leetcodeDB');
 
-    const collectionProblem = await db.collection('databaseProblem');
-    const problemcount = await collectionProblem.countDocuments();
+    const databaseProblem = db.collection('databaseProblem');
+    const checkCollection = await db.listCollections({name: 'databaseProblem'}).toArray();
 
-    if(problemcount === 0){
+    if(checkCollection.length <= 0){
       await db.createCollection('databaseProblem');
       console.log('created new collection- problem'); 
     }
@@ -55,5 +55,7 @@ async function connectToDatabase() {
   }
 }
 
-module.exports = connectToDatabase;
+module.exports = {
+  connectToDatabase: connectToDatabase,
+};
 

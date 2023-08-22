@@ -5,7 +5,7 @@ const app = express()
 const port = 3000
 const secret_key = "secret_key"
 const {auth} = require('./auth')
-const connectToDatabase = require('./database');
+const dbModule = require('./database');
 
 const PROBLEMS = [
     {
@@ -43,10 +43,11 @@ const USERS = [
 
 app.use(cors());
 app.use(express.json());
-app.get('/:id', (req, res) => {
-    const db = connectToDatabase();
-    const databaseProblem = db.collection('databaseProblem');
+app.get('/:id', async (req, res) => {
+    const db = await dbModule.connectToDatabase();
+    const databaseProblem = db.collection('databaseProblem'); 
     const id = req.params.id;
+    console.log(databaseProblem)
     res.json(databaseProblem.slice(id-1, id));
 })
 
