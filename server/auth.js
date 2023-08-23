@@ -1,6 +1,6 @@
 const express = require('express')
 const jwt = require('jsonwebtoken')
-secret_key = "secret_key";
+const secret_key = "secret_key";
 
 module.exports = {
     auth: (req, res, next) => {
