@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 const Problem = () => {
 
-  const [problem, setProbem] = useState({});
+  const [problem, setProblem] = useState({});
   const location = useLocation();
   const nav = useNavigate();
   const token = localStorage.getItem('token');
@@ -21,7 +21,7 @@ const Problem = () => {
     });
 
     const json = await response.json();
-    setProbem(json);
+    setProblem(json);
   }
 
   useEffect(()=>{

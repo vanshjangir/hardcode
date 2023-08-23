@@ -3,6 +3,7 @@ import Home from './components/Home.jsx'
 import Login from './components/Login.jsx'
 import Signup from './components/Signup.jsx'
 import Problem from './components/Problem.jsx'
+import SetProblem from './components/SetProblem.jsx'
 
 
 const App = () => {
@@ -14,6 +15,7 @@ const App = () => {
         <Route path = "/login" element={<Login />}></Route>
         <Route path = "/signup" element={<Signup />}></Route>
         <Route path = "/problem/:id" element={<Problem />}></Route>
+        <Route path = "/setproblem" element={<SetProblem />}></Route>
       </Routes>
     </Router>
   );
