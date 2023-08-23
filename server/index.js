@@ -45,10 +45,10 @@ app.use(cors());
 app.use(express.json());
 app.get('/:id', async (req, res) => {
     const db = await dbModule.connectToDatabase();
-    const databaseProblem = db.collection('databaseProblem'); 
+    const databaseProblem = await db.collection('databaseProblem').find({}).toArray();
+
     const id = req.params.id;
-    console.log(databaseProblem)
-    res.json(databaseProblem.slice(id-1, id));
+    res.json(databaseProblem.slice(id-1,id));
 })
 
 app.post('/login', (req, res) => {
@@ -68,9 +68,9 @@ app.post('/login', (req, res) => {
         res.status(401).send({msg:"User Not Found"});    
 })
 
-app.get('/signup', (req, res) => {
-
-})
+//app.get('/signup', (req, res) => {
+//
+//})
 
 app.get('/problem/:id', auth, (req, res) => {
     id = req.params.id;
