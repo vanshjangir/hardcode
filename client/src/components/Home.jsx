@@ -45,8 +45,8 @@ const Home = () => {
             {problem.map((prob) => (
               <tr key={prob.title}>
                 <td onClick={() => {nav(`problem/${prob.title}`)}}>{prob.title}</td>
-                <td>{prob.Acceptance}</td>
-                <td>{prob.Difficulty}</td>
+                <td>{prob.acceptance}</td>
+                <td>{prob.difficulty}</td>
               </tr>
             ))}
           </tbody>

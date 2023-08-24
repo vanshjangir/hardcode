@@ -16,7 +16,7 @@ app.get('/:id', async (req, res) => {
     const databaseProblem = await db.collection('databaseProblem').find({}).toArray();
 
     const id = req.params.id;
-    res.json(databaseProblem.slice(id-1,id));
+    res.json(databaseProblem.slice(2*(id-1),2*id));
 })
 
 app.post('/login', async (req, res) => {
@@ -46,11 +46,20 @@ app.post('/login', async (req, res) => {
         res.status(401).send({msg:"User Not Found"});    
 })
 
-//app.post('/signup', async (req, res) => {
-//    const user = req.body;
-//    const db = await dbModule.connectToDatabase();
-//    const USERS = await db.collection('users').find({}).toArray();
-//})
+app.post('/signup', async (req, res) => {
+    const user = req.body;
+    const db = await dbModule.connectToDatabase();
+    const USERS = await db.collection('users').find({}).toArray();
+    const userCollection = db.collection('users');
+    
+    foundUser = USERS.find(x => x.email === user.email);
+    if(foundUser){
+        return res.send("user already exists");
+    }
+    
+    userCollection.insertOne(user);
+    return res.status(200).send('successful');
+})
 
 app.get('/problem/:id', auth, async (req, res) => {
     const db = await dbModule.connectToDatabase();
