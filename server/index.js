@@ -82,6 +82,11 @@ app.post('/setproblem', admin, async (req, res) => {
     res.send('successful');
 })
 
+app.post('/submission', auth, (req, res) => {
+    const userSubmission = req.body;
+     
+})
+
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
