@@ -7,7 +7,8 @@ const secret_key = "secret_key"
 const {auth} = require('./auth')
 const {admin} = require('./adminMiddleware')
 const dbModule = require('./database');
-
+const fs = require('fs')
+const { error } = require('console')
 
 app.use(cors());
 app.use(express.json());
@@ -82,9 +83,30 @@ app.post('/setproblem', admin, async (req, res) => {
     res.send('successful');
 })
 
-app.post('/submission', auth, (req, res) => {
+app.post('/submission', auth, async (req, res) => {
     const userSubmission = req.body;
-     
+    const db = await dbModule.connectToDatabase();
+    const databaseProblem = await db.collection('databaseProblem').find({}).toArray();
+    const givenProblem = databaseProblem.find(x => x.title === userSubmission.title);
+
+    fs.writeFileSync('../container/main.cpp', userSubmission.code, 'utf-8');
+    fs.writeFileSync('../container/input.txt', givenProblem.input, 'utf-8' );
+    fs.writeFileSync('../container/output.txt', givenProblem.output, 'utf-8');
+    
+    try{
+        const fileoutput = fs.readFileSync('../container/output.txt', 'utf-8');
+        if(fileoutput == givenProblem.output){
+            res.status(200).json({result: "ACCEPTED"});     
+        }
+        else{
+            res.status(200).json({result: "WRONG ANSWER"});     
+        }
+    }
+    catch(error){
+        console.log(error);
+        return res.status(500).send("internal server error");
+    }
+
 })
 
 

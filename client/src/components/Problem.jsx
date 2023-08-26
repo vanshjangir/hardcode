@@ -5,6 +5,8 @@ import '../index.css'
 const Problem = () => {
 
   const [problem, setProblem] = useState({});
+  const [code, setCode] = useState("");
+  const [result, setResult] = useState("");
   const location = useLocation();
   const nav = useNavigate();
   const token = localStorage.getItem('token');
@@ -25,6 +27,25 @@ const Problem = () => {
     setProblem(json);
   }
 
+  const onsubmit = async () => {
+    setResult("PENDING");
+    const response = await fetch('http://localhost:3000/submission', {
+      method: "POST",
+      headers: {
+        authorization: token,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        'title': problem.title,
+        'code': code, 
+      }),
+    });
+
+    const received = await response.json();
+    setResult(received.result); 
+    
+  }
+
   useEffect(()=>{
     loadProblem();
   },[])
@@ -42,7 +63,9 @@ const Problem = () => {
       </div>
       <div id="problempage-right">
         <h3>Write your code here</h3>
-        <textarea id="problempage-textarea"></textarea>
+        <textarea id="problempage-textarea" onChange={(e) => setCode(e.target.value)}></textarea>
+        <button id="problempage-submitbutton" onClick={onsubmit}>SUBMIT</button>
+        <p>{result}</p>
       </div>
     </div>
   )
