@@ -5,4 +5,4 @@ If you want to contribute to the frontend kindly follow the rules as follows:
 1. For CSS, id or class of a tag should be named as {pagename-actualid}, For example id="Home-loginbutton".
 2. All CSS should be written under the index.css file present in ./client/src/index.css.
 
-NOTE: Please do not change anything in the server directory or anything related to backend in the client directory(api routes, http requests ...etc).
+NOTE: Please do not change anything in the server directory or anything related to backend in the client directory(api routes, http requests ...etc). Make sure to fetch recent commits from master branch before creating a pull request.
