@@ -1,9 +1,9 @@
 FROM gcc:latest
 
-WORKDIR /usr/src/app
+WORKDIR /app
 
-COPY main.cpp input.txt ./
+COPY main.cpp ./
 
-RUN g++ main.cpp -o app
+RUN g++ main.cpp -o main
 
-CMD ["./app", "<", "input.txt"]
+CMD ["./main", "<", "input.txt" , ">", "useroutput.txt", "2>", "error.txt"]
