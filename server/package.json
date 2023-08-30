@@ -1,4 +1,7 @@
 {
+  "scripts":{
+    "start": "node index.js"
+  },
   "dependencies": {
     "childprocess": "^2.0.2",
     "cors": "^2.8.5",

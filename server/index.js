@@ -93,26 +93,20 @@ app.post('/submission', auth, async (req, res) => {
     fs.writeFileSync('../container/input.txt', givenProblem.input, 'utf-8' );
     fs.writeFileSync('../container/output.txt', givenProblem.output, 'utf-8');
     
-    const dockerCommand = `sudo docker run -it --rm \
+    const dockerCommand = `sudo docker run --rm \
     -v ./user_code.cpp:/app/user_code.cpp \
     -v ./input.txt:/app/input.txt \
     -v ./output.txt:/app/output.txt \
     -v ./useroutput.txt:/app/useroutput.txt \
     -v ./error.txt:/app/error.txt code-runner`;
 
-    exec(dockerCommand, (error, stdout, stderr) => {
+    exec(dockerCommand, {cwd: '../container/'}, (error, stdout, stderr) => {
         if (error) {
             console.error(`Error: ${error}`);
             res.status(500).send(`Error: ${error}`);
             return;
         }
-        console.log(`Docker Command Output: ${stdout}`);
-        res.send(`Docker Command Output: <pre>${stdout}</pre>`);
-    });
- 
-
-    
-    try{
+        
         const fileoutput = fs.readFileSync('../container/useroutput.txt', 'utf-8');
         console.log(fileoutput);
         if(fileoutput == givenProblem.output){
@@ -121,11 +115,7 @@ app.post('/submission', auth, async (req, res) => {
         else{
             res.status(200).json({result: "WRONG ANSWER"});     
         }
-    }
-    catch(error){
-        console.log(error);
-        return res.status(500).send("internal server error");
-    }
+    });
 
 })
 
