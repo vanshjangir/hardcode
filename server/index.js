@@ -14,8 +14,7 @@ app.use(cors());
 app.use(express.json());
 app.get('/:id', async (req, res) => {
     const db = await dbModule.connectToDatabase();
-    const databaseProblem = await db.collection('databaseProblem').find({}).toArray();
-
+    const databaseProblem = await db.collection('problems').find({}).toArray();
     const id = req.params.id;
     res.json(databaseProblem.slice(2*(id-1),2*id));
 })
@@ -64,7 +63,7 @@ app.post('/signup', async (req, res) => {
 
 app.get('/problem/:id', auth, async (req, res) => {
     const db = await dbModule.connectToDatabase();
-    const databaseProblem = await db.collection('databaseProblem').find({}).toArray();
+    const databaseProblem = await db.collection('problems').find({}).toArray();
     
     id = req.params.id;
     foundProblem = databaseProblem.find(x => x.title == id);
@@ -78,7 +77,7 @@ app.post('/setproblem', admin, async (req, res) => {
     const db = await dbModule.connectToDatabase();
     const takeProblem = req.body;
 
-    const databaseProblem = db.collection('databaseProblem');
+    const databaseProblem = db.collection('problems');
     databaseProblem.insertOne(takeProblem);
     res.send('successful');
 })
@@ -86,12 +85,14 @@ app.post('/setproblem', admin, async (req, res) => {
 app.post('/submission', auth, async (req, res) => {
     const userSubmission = req.body;
     const db = await dbModule.connectToDatabase();
-    const databaseProblem = await db.collection('databaseProblem').find({}).toArray();
+    const databaseProblem = await db.collection('problems').find({}).toArray();
     const givenProblem = databaseProblem.find(x => x.title === userSubmission.title);
     
     fs.writeFileSync('../container/user_code.cpp', userSubmission.code, 'utf-8');
     fs.writeFileSync('../container/input.txt', givenProblem.input, 'utf-8' );
     fs.writeFileSync('../container/output.txt', givenProblem.output, 'utf-8');
+    fs.writeFileSync('../container/useroutput.txt', '','utf-8');
+    fs.writeFileSync('../container/error.txt', '','utf-8');
     
     const dockerCommand = `sudo docker run --rm \
     -v ./user_code.cpp:/app/user_code.cpp \
@@ -121,5 +122,5 @@ app.post('/submission', auth, async (req, res) => {
 
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
+  console.log(`listening on port ${port}`)
 })

@@ -8,7 +8,7 @@ async function connectToDatabase() {
   try {
     await client.connect();
     console.log('Connected to MongoDB');
-    const db = client.db('leetcodeDB');
+    const db = client.db('easycode');
 
     return db;
   } catch (error) {
