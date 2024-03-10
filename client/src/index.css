@@ -1,0 +1,26 @@
+#homepage-navbar{
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
+    align-items: center;
+}
+#homepage-navbar-buttons{
+    display: flex;
+    width: 100%;
+    justify-content: right;
+}
+#homepage-navbar-title{
+    display: flex;
+    width: 100%;
+}
+#homepage-navbar-buttons > *{
+    margin-right: 10px;
+}
+#homepage-problem-content{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+#homepage-pagebutton{
+    justify-content: left;
+}

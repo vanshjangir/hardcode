@@ -10,10 +10,14 @@ const dbModule = require('./database');
 const fs = require('fs')
 const { exec } = require('child_process');
 
+async function connectDB(){
+    const db = await dbModule.connectToDatabase();
+    global.db = db;
+}
+
 app.use(cors());
 app.use(express.json());
 app.get('/:id', async (req, res) => {
-    const db = await dbModule.connectToDatabase();
     const databaseProblem = await db.collection('problems').find({}).toArray();
     const id = req.params.id;
     res.json(databaseProblem.slice(2*(id-1),2*id));
@@ -23,7 +27,6 @@ app.post('/login', async (req, res) => {
     
     const user = req.body;
     let role = "user";
-    const db = await dbModule.connectToDatabase();
     const USERS = await db.collection('users').find({}).toArray();
     const ADMIN = await db.collection('admins').find({}).toArray();
 
@@ -48,7 +51,6 @@ app.post('/login', async (req, res) => {
 
 app.post('/signup', async (req, res) => {
     const user = req.body;
-    const db = await dbModule.connectToDatabase();
     const USERS = await db.collection('users').find({}).toArray();
     const userCollection = db.collection('users');
     
@@ -62,7 +64,6 @@ app.post('/signup', async (req, res) => {
 })
 
 app.get('/problem/:id', auth, async (req, res) => {
-    const db = await dbModule.connectToDatabase();
     const databaseProblem = await db.collection('problems').find({}).toArray();
     
     id = req.params.id;
@@ -74,7 +75,6 @@ app.get('/problem/:id', auth, async (req, res) => {
 })
 
 app.post('/setproblem', admin, async (req, res) => {
-    const db = await dbModule.connectToDatabase();
     const takeProblem = req.body;
 
     const databaseProblem = db.collection('problems');
@@ -84,15 +84,14 @@ app.post('/setproblem', admin, async (req, res) => {
 
 app.post('/submission', auth, async (req, res) => {
     const userSubmission = req.body;
-    const db = await dbModule.connectToDatabase();
     const databaseProblem = await db.collection('problems').find({}).toArray();
     const givenProblem = databaseProblem.find(x => x.title === userSubmission.title);
     
-    fs.writeFileSync('../container/user_code.cpp', userSubmission.code, 'utf-8');
-    fs.writeFileSync('../container/input.txt', givenProblem.input, 'utf-8' );
-    fs.writeFileSync('../container/output.txt', givenProblem.output, 'utf-8');
-    fs.writeFileSync('../container/useroutput.txt', '','utf-8');
-    fs.writeFileSync('../container/error.txt', '','utf-8');
+    fs.writeFileSync('./container/user_code.cpp', userSubmission.code, 'utf-8');
+    fs.writeFileSync('./container/input.txt', givenProblem.input, 'utf-8' );
+    fs.writeFileSync('./container/output.txt', givenProblem.output, 'utf-8');
+    fs.writeFileSync('./container/useroutput.txt', '','utf-8');
+    fs.writeFileSync('./container/error.txt', '','utf-8');
     
     const dockerCommand = `sudo docker run --rm \
     -v ./user_code.cpp:/app/user_code.cpp \
@@ -101,14 +100,14 @@ app.post('/submission', auth, async (req, res) => {
     -v ./useroutput.txt:/app/useroutput.txt \
     -v ./error.txt:/app/error.txt code-runner`;
 
-    exec(dockerCommand, {cwd: '../container/'}, (error, stdout, stderr) => {
+    exec(dockerCommand, {cwd: './container/'}, (error, stdout, stderr) => {
         if (error) {
             console.error(`Error: ${error}`);
             res.status(500).send(`Error: ${error}`);
             return;
         }
         
-        const fileoutput = fs.readFileSync('../container/useroutput.txt', 'utf-8');
+        const fileoutput = fs.readFileSync('./container/useroutput.txt', 'utf-8');
         console.log(fileoutput);
         if(fileoutput == givenProblem.output){
             res.status(200).json({result: "ACCEPTED"});     
@@ -120,7 +119,11 @@ app.post('/submission', auth, async (req, res) => {
 
 })
 
+/* connect to database first*/
+connectDB();
 
 app.listen(port, () => {
   console.log(`listening on port ${port}`)
 })
+
+module.exports = app;
