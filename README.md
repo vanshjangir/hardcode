@@ -1,4 +1,4 @@
-# EasyCode
+# HardCode
 
 ### TODO
 1. Multi Language Support (currently only supports cpp submissions)
