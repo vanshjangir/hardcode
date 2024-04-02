@@ -26,7 +26,7 @@ const Home = () => {
     <div id="homepage">
       <div id="homepage-navbar">
         <div id="homepage-navbar-title">
-          <p>EasyCode</p>
+          <p>HardCode</p>
         </div>
         <div id="homepage-navbar-buttons">
           <button id="homepage-loginbutton" onClick={()=> nav('/login')}>login</button>
