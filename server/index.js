@@ -15,6 +15,11 @@ async function connectDB(){
     global.db = db;
 }
 
+const {MongoClient} = require('mongodb')
+const uri = "mongodb+srv://vansh:kWZ2MMhvZV2yJcst@hardcode.b6g1pwr.mongodb.net/?retryWrites=true&w=majority&appName=hardcode"
+const client = new MongoClient(uri);
+const db = client.db('hardcode');
+
 app.use(cors());
 app.use(express.json());
 app.get('/:id', async (req, res) => {

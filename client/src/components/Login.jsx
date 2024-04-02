@@ -8,7 +8,7 @@ const Login = () => {
   const nav = useNavigate();
 
   const submit = async () => {
-    const response = await fetch('http://localhost:3000/login', {
+    const response = await fetch('http://hardcodeserver.vercel.app/login', {
       method: "POST",
       headers: {
         'Content-Type': 'application/json',
