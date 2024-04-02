@@ -29,7 +29,7 @@ const Problem = () => {
 
   const onsubmit = async () => {
     setResult("PENDING");
-    const response = await fetch('http://localhost:3000/submission', {
+    const response = await fetch('https://hardcodeserver.vercel.app/submission', {
       method: "POST",
       headers: {
         authorization: token,
