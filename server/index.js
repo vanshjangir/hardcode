@@ -6,14 +6,8 @@ const port = 3000
 const secret_key = "secret_key"
 const {auth} = require('./auth')
 const {admin} = require('./adminMiddleware')
-const dbModule = require('./database');
 const fs = require('fs')
 const { exec } = require('child_process');
-
-async function connectDB(){
-    const db = await dbModule.connectToDatabase();
-    global.db = db;
-}
 
 const {MongoClient} = require('mongodb')
 const uri = "mongodb+srv://vansh:kWZ2MMhvZV2yJcst@hardcode.b6g1pwr.mongodb.net/?retryWrites=true&w=majority&appName=hardcode"
@@ -123,9 +117,6 @@ app.post('/submission', auth, async (req, res) => {
     });
 
 })
-
-/* connect to database first*/
-connectDB();
 
 app.listen(port, () => {
   console.log(`listening on port ${port}`)
