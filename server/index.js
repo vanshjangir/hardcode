@@ -16,12 +16,6 @@ const db = client.db('hardcode');
 
 app.use(cors());
 app.use(express.json());
-app.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', process.env.NEXT_PUBLIC_VERCEL_URL);
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    next();
-});
 
 app.get('/:id', async (req, res) => {
     const databaseProblem = await db.collection('problems').find({}).toArray();
