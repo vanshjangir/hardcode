@@ -4,7 +4,8 @@ import '../index.css'
 
 const Problem = () => {
 
-  const [problem, setProblem] = useState({});
+  const [problem, setProblem] = useState("");
+  const [logs, setLogs] = useState("");
   const [code, setCode] = useState("");
   const [result, setResult] = useState("");
   const location = useLocation();
@@ -29,7 +30,8 @@ const Problem = () => {
 
   const onsubmit = async () => {
     setResult("PENDING");
-    const response = await fetch('https://hardcodeserver.vercel.app/submission', {
+    setLogs("LOGS");
+    const response = await fetch('http://144.144.144.144:3000/submission', {
       method: "POST",
       headers: {
         authorization: token,
@@ -42,8 +44,8 @@ const Problem = () => {
     });
 
     const received = await response.json();
-    setResult(received.result); 
-    
+    setResult(received.result);
+    setLogs(received.log);
   }
 
   useEffect(()=>{
@@ -66,6 +68,7 @@ const Problem = () => {
         <textarea id="problempage-textarea" onChange={(e) => setCode(e.target.value)}></textarea>
         <button id="problempage-submitbutton" onClick={onsubmit}>SUBMIT</button>
         <p>{result}</p>
+        <p>{logs}</p>
       </div>
     </div>
   )

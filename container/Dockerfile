@@ -2,7 +2,9 @@ FROM gcc:latest
 
 WORKDIR /app
 
-COPY main.cpp ./
+RUN mkdir codefiles
+
+COPY main.cpp /app
 
 RUN g++ main.cpp -o main
 

@@ -1,16 +1,17 @@
+const fs = require('fs')
 const express = require('express')
-const cors = require('cors')
 const jwt = require('jsonwebtoken')
-const app = express()
-const port = 3000
-const secret_key = "secret_key"
+const cors = require('cors')
+
 const {auth} = require('./auth')
 const {admin} = require('./adminMiddleware')
+const {createDockerClient, loadFiles} = require('./prerun');
+const {connectMongoDB} = require('./prerun');
 
-const {MongoClient} = require('mongodb')
-const uri = "mongodb+srv://vansh:kWZ2MMhvZV2yJcst@hardcode.b6g1pwr.mongodb.net/?retryWrites=true&w=majority&appName=hardcode"
-const client = new MongoClient(uri);
-const db = client.db('hardcode');
+const port = 3000
+const secret_key = "secret_key"
+
+const app = express()
 
 app.use(cors());
 app.use(express.json());
@@ -84,9 +85,35 @@ app.post('/submission', auth, async (req, res) => {
     const userSubmission = req.body;
     const databaseProblem = await db.collection('problems').find({}).toArray();
     const givenProblem = databaseProblem.find(x => x.title === userSubmission.title);
+
+    fs.writeFileSync('./codefiles/user_code.cpp', userSubmission.code, 'utf-8');
+    fs.writeFileSync('./codefiles/input.txt', givenProblem.input, 'utf-8' );
+
+    docker_client.write("run");
     
-    res.status(200).json({result: "WRONG ANSWER"});     
+    docker_client.once('data', (data) => {
+        const result = data.toString();
+        const fileoutput = fs.readFileSync('./codefiles/useroutput.txt', 'utf-8');
+        const fileerror = fs.readFileSync('./codefiles/error.txt', 'utf-8');
+        
+        if(result == "incomplete"){
+            return res.status(200).json({result: "COMPILATION ERROR", log: fileerror});
+        }
+
+        console.log(fileoutput);
+
+        if(fileoutput == givenProblem.output){
+            res.status(200).json({result: "ACCEPTED", log: "accept"});
+        }
+        else{
+            res.status(200).json({result: "WRONG ANSWER", log: fileerror});
+        }
+    });
 })
+
+const db = connectMongoDB();
+const docker_client = createDockerClient(8080, "144.144.144.1");
+loadFiles();
 
 app.listen(port, () => {
   console.log(`listening on port ${port}`)
