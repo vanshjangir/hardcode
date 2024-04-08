@@ -1,29 +1,28 @@
 # HardCode
 
-### TODO
-1. Multi Language Support (currently only supports cpp submissions)
-
 ### Requirements
 1. node and npm
 2. docker
 3. MongoDB
 
-### Build
-1. In the client and server directory
+### Build && Setup, may require extra privileges
+* Setup (once)
 ```
-npm install
+python DOCKER.py build
 ```
-2. In the container directory
+* Build
 ```
-docker build -t code-runner .
+python DOCKER.py setup
+```
+* Run
+```
+python DOCKER.py run
+```
+* Kill
+```
+python DOCKER.py kill
 ```
 
-### Run
-1. In the client directory
-```
-npm run dev
-```
-2. In the server directory (with sudo if linux)
-```
-npm start
-```
+### TODO
+- [ ] Multi Language Support (currently only supports cpp submissions)
+- [ ] Scaling the submission backend
