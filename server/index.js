@@ -86,18 +86,23 @@ app.post('/submission', auth, async (req, res) => {
     const databaseProblem = await db.collection('problems').find({}).toArray();
     const givenProblem = databaseProblem.find(x => x.title === userSubmission.title);
 
-    fs.writeFileSync('./codefiles/user_code.cpp', userSubmission.code, 'utf-8');
-    fs.writeFileSync('./codefiles/input.txt', givenProblem.input, 'utf-8' );
-
-    docker_client.write("run");
+    const docker_client = createDockerClient(8080, "144.144.144.122");
+    loadFiles(userSubmission.title);
     
-    docker_client.once('data', (data) => {
+    fs.writeFileSync(`./codefiles/usercode_${userSubmission.title}.cpp`, userSubmission.code, 'utf-8');
+    fs.writeFileSync(`./codefiles/input_${userSubmission.title}.txt`, givenProblem.input, 'utf-8' );
+
+    console.log(userSubmission.title);
+    docker_client.write((userSubmission.title + "\0"));
+    docker_client.on('data', (data) => {
         const result = data.toString();
-        const fileoutput = fs.readFileSync('./codefiles/useroutput.txt', 'utf-8');
-        const fileerror = fs.readFileSync('./codefiles/error.txt', 'utf-8');
+        const fileoutput = fs.readFileSync(`./codefiles/useroutput_${userSubmission.title}.txt`, 'utf-8');
+        const fileerror = fs.readFileSync(`./codefiles/error_${userSubmission.title}.txt`, 'utf-8');
+
+        console.log(`result is:${result}`);
         
-        if(result == "incomplete"){
-            return res.status(200).json({result: "COMPILATION ERROR", log: fileerror});
+        if(result != "SUCCESS"){
+            return res.status(200).json({result: result, log: fileerror});
         }
 
         console.log(fileoutput);
@@ -106,17 +111,15 @@ app.post('/submission', auth, async (req, res) => {
             res.status(200).json({result: "ACCEPTED", log: "accept"});
         }
         else{
-            res.status(200).json({result: "WRONG ANSWER", log: fileerror});
+            res.status(200).json({result: "WRONG ANSWER", log: fileoutput});
         }
     });
 })
 
 const db = connectMongoDB();
-const docker_client = createDockerClient(8080, "144.144.144.1");
-loadFiles();
 
 app.listen(port, () => {
-  console.log(`listening on port ${port}`)
+    console.log(`listening on port ${port}`)
 })
 
 module.exports = app;

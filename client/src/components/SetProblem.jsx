@@ -13,7 +13,7 @@ const SetProblem = () => {
   const token = localStorage.getItem('token'); 
 
   const submitProblem = async () => {
-    const response = await fetch(`https://hardcodeserver.vercel.app/setproblem`, {
+    const response = await fetch(`http://144.144.144.144:3000/setproblem`, {
       method: "POST",
       body: JSON.stringify({
         title: problemTitle,

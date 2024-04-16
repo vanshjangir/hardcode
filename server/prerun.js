@@ -17,11 +17,11 @@ function createDockerClient(dport, dhost){
     return docker_client;
 }
 
-function loadFiles(){
-    fs.writeFileSync('./codefiles/usercode.cpp', '', 'utf8');
-    fs.writeFileSync('./codefiles/useroutput.txt', '', 'utf8');
-    fs.writeFileSync('./codefiles/input.txt', '', 'utf8');
-    fs.writeFileSync('./codefiles/error.txt', '', 'utf8');
+function loadFiles(id){
+    fs.writeFileSync(`./codefiles/usercode_${id}.cpp`, '', 'utf8');
+    fs.writeFileSync(`./codefiles/useroutput_${id}.txt`, '', 'utf8');
+    fs.writeFileSync(`./codefiles/input_${id}.txt`, '', 'utf8');
+    fs.writeFileSync(`./codefiles/error_${id}.txt`, '', 'utf8');
 }
 
 module.exports = {

@@ -8,7 +8,7 @@ const Home = () => {
   const nav = useNavigate();
 
   const getProblem = async (id) => {
-    const response = await fetch(`https://hardcodeserver.vercel.app/${id}`, {
+    const response = await fetch(`http://144.144.144.144:3000/${id}`, {
       method: "GET",
     });
     
