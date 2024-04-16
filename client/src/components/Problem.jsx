@@ -17,7 +17,7 @@ const Problem = () => {
       return nav('/login');
     }
 
-    const response = await fetch(`https://hardcodeserver.vercel.app${location.pathname}`, {
+    const response = await fetch(`http://144.144.144.144:3000${location.pathname}`, {
       method: "GET",
       headers: {
         authorization: token,

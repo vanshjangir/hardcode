@@ -9,7 +9,7 @@ const Signup = () => {
   const nav = useNavigate();
 
   const submit = async () => {
-    const response = await fetch('https://hardcodeserver.vercel.app/signup', {
+    const response = await fetch('http://144.144.144.144:3000/signup', {
       method: "POST",
       headers: {
         'Content-Type': "application/json",

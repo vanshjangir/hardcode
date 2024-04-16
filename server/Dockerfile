@@ -18,4 +18,4 @@ COPY prerun.js /app
 
 COPY index.js /app
 
-CMD ["npm", "start"]
+CMD ["npx", "nodemon", "start"]
