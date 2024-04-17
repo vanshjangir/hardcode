@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import './style/problempage.css'
 import '../index.css'
 
 const Problem = () => {
@@ -39,7 +40,8 @@ const Problem = () => {
       },
       body: JSON.stringify({
         'title': problem.title,
-        'code': code, 
+        'code': code,
+        'username': localStorage.getItem('username'),
       }),
     });
 
@@ -54,7 +56,7 @@ const Problem = () => {
 
   return (
     <div id="problempage">
-      <div id="problempage-left">
+      <div id="left">
         <h1>{problem.title}</h1>
         <h4>Description</h4>
         <p>{problem.description}</p>
@@ -63,12 +65,12 @@ const Problem = () => {
         <h4>Output</h4>
         <p>{problem.output}</p>
       </div>
-      <div id="problempage-right">
-        <h3>Write your code here</h3>
-        <textarea id="problempage-textarea" onChange={(e) => setCode(e.target.value)}></textarea>
-        <button id="problempage-submitbutton" onClick={onsubmit}>SUBMIT</button>
-        <p>{result}</p>
-        <p>{logs}</p>
+      <div id="right">
+        <h3>Code</h3>
+        <textarea id="textarea" onChange={(e) => setCode(e.target.value)}></textarea><br/>
+        <button id="submitbutton" onClick={onsubmit}>SUBMIT</button>
+        <p>RESULT<br/>{result}</p>
+        <p>LOGS<br/>{logs}</p>
       </div>
     </div>
   )

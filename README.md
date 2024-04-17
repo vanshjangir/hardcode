@@ -26,5 +26,7 @@ Setup should be done only once, unless volume or network has changed. Before doi
 
 ### TODO
 - [ ] Multi Language Support (currently only supports cpp submissions)
-- [ ] Scaling the submission backend
+- [x] Scaling the submission backend (vertical)
+- [ ] Scaling the submission backend (horizontal)
 - [ ] Decent Frontend
+- [ ] Contest feature

@@ -4,6 +4,9 @@ import Login from './components/Login.jsx'
 import Signup from './components/Signup.jsx'
 import Problem from './components/Problem.jsx'
 import SetProblem from './components/SetProblem.jsx'
+import Contests from './components/Contests.jsx'
+import CreateContest from './components/CreateContest.jsx'
+import Profile from './components/Profile.jsx'
 
 
 const App = () => {
@@ -16,6 +19,9 @@ const App = () => {
         <Route path = "/signup" element={<Signup />}></Route>
         <Route path = "/problem/:id" element={<Problem />}></Route>
         <Route path = "/setproblem" element={<SetProblem />}></Route>
+        <Route path = "/contests" element={<Contests />}></Route>
+        <Route path = "/createcontests" element={<CreateContest />}></Route>
+        <Route path = "/profile/:username" element={<Profile />}></Route>
       </Routes>
     </Router>
   );

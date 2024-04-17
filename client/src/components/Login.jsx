@@ -5,6 +5,7 @@ const Login = () => {
 
   const [Uemail, setEmail] = useState("");
   const [Upassword, setPassword] = useState("");
+  const [loginResponse, setLoginResponse] = useState("");
   const nav = useNavigate();
 
   const submit = async () => {
@@ -23,18 +24,23 @@ const Login = () => {
     const json = await response.json();
     if(status === 200){
       localStorage.setItem("token", json.token);
+      localStorage.setItem("username", Uemail);
       nav(-1);
     }
     else{
-      console.log("dlfjl")
+      setLoginResponse(json.msg);
     }
   }
 
   return (
     <div>
       <input placeholder="email" id="loginpage-input-email" onChange={(e) => setEmail(e.target.value)}/>
+      <br/>
       <input placeholder="password" id="loginpage-input-password" onChange={(e) => setPassword(e.target.value)}/>
+      <br/>
       <button type="button" onClick={submit}>Submit</button>
+      <br/>
+      {loginResponse}
     </div>
   )
 }

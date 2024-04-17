@@ -36,12 +36,19 @@ const SetProblem = () => {
 
   return (
     <div>
+      <h2>Set Problem</h2>
       <input placeholder="title" onChange={(e)=> typeProblemTitle(e.target.value)}/>
+      <br/>
       <input placeholder="description" onChange={(e)=> typeProblemDescription(e.target.value)}/>
+      <br/>
       <input placeholder="acceptance" onChange={(e)=> typeProblemAcceptance(e.target.value)}/>
+      <br/>
       <input placeholder="difficulty" onChange={(e)=> typeProblemDifficulty(e.target.value)}/>
+      <br/>
       <input placeholder="input" onChange={(e)=> typeProblemInput(e.target.value)}/>
+      <br/>
       <input placeholder="output" onChange={(e)=> typeProblemOutput(e.target.value)}/>
+      <br/>
       <button type="button" onClick={submitProblem}>submit</button>
     </div>
   )
