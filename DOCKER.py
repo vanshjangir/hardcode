@@ -33,6 +33,7 @@ def coderunner():
                     "--net", "hardcode-net",
                     "--ip", "144.144.144.122",
                     "-p", "8080:8080",
+                    "--privileged",
                     "-v", "coderunnerfiles:/app/codefiles",
                     "coderunner"])
 

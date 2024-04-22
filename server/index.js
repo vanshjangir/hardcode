@@ -89,15 +89,28 @@ app.post('/submission', auth, async (req, res) => {
   const docker_client = createDockerClient(8080, "144.144.144.122");
   loadFiles(userSubmission.username+"_"+userSubmission.title);
   
-  fs.writeFileSync(`./codefiles/usercode_${userSubmission.username}_${userSubmission.title}.cpp`, userSubmission.code, 'utf-8');
-  fs.writeFileSync(`./codefiles/input_${userSubmission.username}_${userSubmission.title}.txt`, givenProblem.input, 'utf-8' );
+  fs.writeFileSync(
+    `./codefiles/usercode_${userSubmission.username}_${userSubmission.title}.cpp`,
+    userSubmission.code, 'utf-8');
+  fs.writeFileSync(
+    `./codefiles/input_${userSubmission.username}_${userSubmission.title}.txt`,
+    givenProblem.input, 'utf-8' );
 
-  console.log(userSubmission.title);
-  docker_client.write((userSubmission.username + "_" + userSubmission.title + "\0"));
+  const subData = userSubmission.username + "_" +
+    userSubmission.title + "\0" +
+    givenProblem.timelimit + "\0" +
+    givenProblem.memlimit + "\0";
+
+  docker_client.write(subData);
   docker_client.on('data', (data) => {
+
     const result = data.toString();
-    const fileoutput = fs.readFileSync(`./codefiles/useroutput_${userSubmission.title}.txt`, 'utf-8');
-    const fileerror = fs.readFileSync(`./codefiles/error_${userSubmission.title}.txt`, 'utf-8');
+    const fileoutput = fs.readFileSync(
+      `./codefiles/useroutput_${userSubmission.username}_${userSubmission.title}.txt`,
+      'utf-8');
+    const fileerror = fs.readFileSync(
+      `./codefiles/error_${userSubmission.username}_${userSubmission.title}.txt`,
+      'utf-8');
 
     console.log(`result is:${result}`);
     

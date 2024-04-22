@@ -29,4 +29,4 @@ Setup should be done only once, unless volume or network has changed. Before doi
 - [x] Scaling the submission backend (vertical)
 - [ ] Scaling the submission backend (horizontal)
 - [ ] Decent Frontend
-- [ ] Contest feature
+- [x] Memory Limit and Time Limit
