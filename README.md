@@ -3,26 +3,16 @@
 ### Requirements
 1. node and npm
 2. docker
-3. mongodb
+3. docker-compose
 
-### Build and Setup, may require extra privileges
-* Setup
+### Build and Run, may require extra privileges
 ```
-python DOCKER.py setup
+docker-compose build
 ```
-* Build
 ```
-python DOCKER.py build
+docker-compose up
 ```
-* Run
-```
-python DOCKER.py run
-```
-* Kill
-```
-python DOCKER.py kill
-```
-Setup should be done only once, unless volume or network has changed. Before doing again first delete both the previous volume and network.
+Append harcodeserver or coderunner after build/up for only that service
 
 ### TODO
 - [ ] Multi Language Support (currently only supports cpp submissions)

@@ -1,0 +1,35 @@
+networks:
+  hardcode-net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 144.144.144.0/24
+
+volumes:
+  coderunnerfiles:
+
+services:
+  coderunner:
+    image: coderunner
+    build:
+      context: ./container/
+    networks:
+      hardcode-net:
+        ipv4_address: 144.144.144.122
+    ports:
+      - "8080:8080"
+    volumes:
+      - coderunnerfiles:/app/codefiles
+  
+  hardcodeserver:
+    image: hardcodeserver
+    build:
+      context: ./server/
+    networks:
+      hardcode-net:
+        ipv4_address: 144.144.144.144
+    ports:
+      - "3000:3000"
+    volumes:
+      - coderunnerfiles:/app/codefiles
+      - ./server:/app
