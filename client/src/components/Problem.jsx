@@ -41,6 +41,29 @@ const Problem = () => {
       body: JSON.stringify({
         'title': problem.title,
         'code': code,
+        'type': 'submit',
+        'username': localStorage.getItem('username'),
+      }),
+    });
+
+    const received = await response.json();
+    setResult(received.result);
+    setLogs(received.log);
+  }
+
+  const onrun = async () => {
+    setResult("PENDING");
+    setLogs("LOGS");
+    const response = await fetch('http://144.144.144.144:3000/submission', {
+      method: "POST",
+      headers: {
+        authorization: token,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        'title': problem.title,
+        'code': code,
+        'type': 'run',
         'username': localStorage.getItem('username'),
       }),
     });
@@ -59,18 +82,20 @@ const Problem = () => {
       <div id="left">
         <h1>{problem.title}</h1>
         <h4>Description</h4>
-        <p>{problem.description}</p>
+        <pre>{problem.description}</pre>
         <h4>Input</h4>
-        <p>{problem.input}</p>
+        <pre>{problem.input}</pre>
         <h4>Output</h4>
-        <p>{problem.output}</p>
+        <pre>{problem.output}</pre>
       </div>
       <div id="right">
         <h3>Code</h3>
         <textarea id="textarea" onChange={(e) => setCode(e.target.value)}></textarea><br/>
+        <button id="runbutton" onClick={onrun}>RUN</button>
+        &nbsp;
         <button id="submitbutton" onClick={onsubmit}>SUBMIT</button>
         <p>RESULT<br/>{result}</p>
-        <p>LOGS<br/>{logs}</p>
+        <p>LOGS<br/><pre>{logs}</pre></p>
       </div>
     </div>
   )

@@ -1,0 +1,18 @@
+#setproblem{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+}
+textarea{
+    width: 500px;
+}
+#description-area{
+    height: 200px;
+}
+.io{
+    height: 100px;
+}
+.testcase{
+    height: 150px;
+}

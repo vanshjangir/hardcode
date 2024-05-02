@@ -77,9 +77,37 @@ app.post('/setproblem', admin, async (req, res) => {
   const takeProblem = req.body;
 
   const databaseProblem = db.collection('problems');
-  databaseProblem.insertOne(takeProblem);
-  res.send('successful');
-})
+  const problemArray = await databaseProblem.find({}).toArray();
+  
+  const foundProblem = problemArray.find(x => x.title === takeProblem.title);
+  if(foundProblem){
+    res.status(400).json({msg: "problem title exists"});
+  }
+  else{
+    databaseProblem.insertOne(takeProblem);
+    res.status(200).json({msg: "successful"});
+  }
+});
+
+
+async function checkTestcase(useroutput, acutaloutput){
+  acutaloutput = acutaloutput.trim()
+  let numTestcases = 1;
+  let ituser = 0;
+  const useroutputArray = useroutput.split("\n");
+  const actualoutputArray = acutaloutput.split("\n");
+
+  for(let i=0; i<actualoutputArray.length; i++){
+    if(actualoutputArray[i] === ''){
+      numTestcases++;
+      continue;
+    }
+    if(useroutputArray[ituser++] != actualoutputArray[i]){
+      return {result: "WA", log: `wrong answer at testcase ${numTestcases}\n${useroutput}`};
+    }
+  }
+  return {result: "AC", log: `accepted`};
+}
 
 app.post('/submission', auth, async (req, res) => {
   const userSubmission = req.body;
@@ -92,9 +120,16 @@ app.post('/submission', auth, async (req, res) => {
   fs.writeFileSync(
     `./codefiles/usercode_${userSubmission.username}_${userSubmission.title}.cpp`,
     userSubmission.code, 'utf-8');
-  fs.writeFileSync(
-    `./codefiles/input_${userSubmission.username}_${userSubmission.title}.txt`,
-    givenProblem.input, 'utf-8' );
+
+  if(userSubmission.type == 'run'){
+    fs.writeFileSync(
+      `./codefiles/input_${userSubmission.username}_${userSubmission.title}.txt`,
+      givenProblem.input, 'utf-8' );
+  }else{
+    fs.writeFileSync(
+      `./codefiles/input_${userSubmission.username}_${userSubmission.title}.txt`,
+      givenProblem.testcaseinput, 'utf-8' );
+  }
 
   const subData = userSubmission.username + "_" +
     userSubmission.title + "\0" +
@@ -102,12 +137,12 @@ app.post('/submission', auth, async (req, res) => {
     givenProblem.memlimit + "\0";
 
   docker_client.write(subData);
-  docker_client.on('data', (data) => {
+  docker_client.on('data', async (data) => {
 
     const result = data.toString();
     const fileoutput = fs.readFileSync(
       `./codefiles/useroutput_${userSubmission.username}_${userSubmission.title}.txt`,
-      'utf-8');
+      'utf-8').trim();
     const fileerror = fs.readFileSync(
       `./codefiles/error_${userSubmission.username}_${userSubmission.title}.txt`,
       'utf-8');
@@ -120,12 +155,18 @@ app.post('/submission', auth, async (req, res) => {
 
     console.log(fileoutput);
 
-    if(fileoutput == givenProblem.output){
-      res.status(200).json({result: "ACCEPTED", log: "accept"});
+    if(userSubmission.type === 'run'){
+      if(fileoutput == givenProblem.output){
+        res.status(200).json({result: "AC", log: "accept"});
+      }
+      else{
+        res.status(200).json({result: "WA", log: fileoutput});
+      }
+    }else{
+      const testResult = await checkTestcase(fileoutput, givenProblem.testcaseoutput);
+      res.status(200).json({result: testResult.result, log: testResult.log})
     }
-    else{
-      res.status(200).json({result: "WRONG ANSWER", log: fileoutput});
-    }
+
   });
 })
 

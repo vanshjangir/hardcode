@@ -66,9 +66,11 @@ const Home = () => {
       </div>
       <br/>
       <div id='contest'>
-      <button id='contestbutton' onClick={()=> nav('/contests')}>Contests</button>
-      &nbsp;
-      <button id='create-contestbutton' onClick={()=> nav('/createcontests')}>Create contest</button>
+        <button id='contestbutton' onClick={()=> nav('/contests')}>Contests</button>
+        &nbsp;
+        <button id='create-contestbutton' onClick={()=> nav('/createcontests')}>Create contest</button>
+        &nbsp;
+        <button id='setproblembutton' onClick={()=> nav('/setproblem')}>Set Problem</button>
       </div>
       <br/>
       <h2>Problem Set</h2>
@@ -82,7 +84,6 @@ const Home = () => {
             <thead>
               <tr>
                 <td>Title</td>
-                <td>Acceptance</td>
                 <td>Difficulty</td>
               </tr>
             </thead>
@@ -92,7 +93,6 @@ const Home = () => {
                   <td onClick={() => {nav(`problem/${prob.title}`)}}>
                   <a href=''>{prob.title}</a>
                   </td>
-                  <td>{prob.acceptance}</td>
                   <td>{prob.difficulty}</td>
                 </tr>
               ))}
