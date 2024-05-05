@@ -89,47 +89,20 @@ app.post('/setproblem', admin, async (req, res) => {
   }
 });
 
-
-async function checkTestcase(useroutput, acutaloutput){
-  acutaloutput = acutaloutput.trim()
-  let numTestcases = 1;
-  let ituser = 0;
-  const useroutputArray = useroutput.split("\n");
-  const actualoutputArray = acutaloutput.split("\n");
-
-  for(let i=0; i<actualoutputArray.length; i++){
-    if(actualoutputArray[i] === ''){
-      numTestcases++;
-      continue;
-    }
-    if(useroutputArray[ituser++] != actualoutputArray[i]){
-      return {result: "WA", log: `wrong answer at testcase ${numTestcases}\n${useroutput}`};
-    }
-  }
-  return {result: "AC", log: `accepted`};
-}
-
-app.post('/submission', auth, async (req, res) => {
-  const userSubmission = req.body;
-  const databaseProblem = await db.collection('problems').find({}).toArray();
-  const givenProblem = databaseProblem.find(x => x.title === userSubmission.title);
-
-  const docker_client = createDockerClient(8080, "144.144.144.122");
-  loadFiles(userSubmission.username+"_"+userSubmission.title);
+async function runTestCase(userSubmission, givenProblem, i) {
   
+  const docker_client = createDockerClient(8080, "144.144.144.122");
+  loadFiles(userSubmission.username + "_" + userSubmission.title);
+
   fs.writeFileSync(
     `./codefiles/usercode_${userSubmission.username}_${userSubmission.title}.cpp`,
-    userSubmission.code, 'utf-8');
+    userSubmission.code, 'utf-8'
+  );
 
-  if(userSubmission.type == 'run'){
-    fs.writeFileSync(
-      `./codefiles/input_${userSubmission.username}_${userSubmission.title}.txt`,
-      givenProblem.input, 'utf-8' );
-  }else{
-    fs.writeFileSync(
-      `./codefiles/input_${userSubmission.username}_${userSubmission.title}.txt`,
-      givenProblem.testcaseinput, 'utf-8' );
-  }
+  fs.writeFileSync(
+    `./codefiles/input_${userSubmission.username}_${userSubmission.title}.txt`,
+    givenProblem.testcase[i].input, 'utf-8'
+  );
 
   const subData = userSubmission.username + "_" +
     userSubmission.title + "\0" +
@@ -137,37 +110,50 @@ app.post('/submission', auth, async (req, res) => {
     givenProblem.memlimit + "\0";
 
   docker_client.write(subData);
-  docker_client.on('data', async (data) => {
 
-    const result = data.toString();
-    const fileoutput = fs.readFileSync(
-      `./codefiles/useroutput_${userSubmission.username}_${userSubmission.title}.txt`,
-      'utf-8').trim();
-    const fileerror = fs.readFileSync(
-      `./codefiles/error_${userSubmission.username}_${userSubmission.title}.txt`,
-      'utf-8');
-
-    console.log(`result is:${result}`);
-    
-    if(result != "SUCCESS"){
-      return res.status(200).json({result: result, log: fileerror});
-    }
-
-    console.log(fileoutput);
-
-    if(userSubmission.type === 'run'){
-      if(fileoutput == givenProblem.output){
-        res.status(200).json({result: "AC", log: "accept"});
-      }
-      else{
-        res.status(200).json({result: "WA", log: fileoutput});
-      }
-    }else{
-      const testResult = await checkTestcase(fileoutput, givenProblem.testcaseoutput);
-      res.status(200).json({result: testResult.result, log: testResult.log})
-    }
-
+  const data = await new Promise((resolve) => {
+    docker_client.on('data', (data) => {
+      resolve(data);
+    });
   });
+
+  const result = data.toString();
+  const fileoutput = fs.readFileSync(
+    `./codefiles/useroutput_${userSubmission.username}_${userSubmission.title}.txt`,
+    'utf-8'
+  ).trim();
+  const fileerror = fs.readFileSync(
+    `./codefiles/error_${userSubmission.username}_${userSubmission.title}.txt`,
+    'utf-8'
+  );
+
+  console.log(`result is:${result}`);
+
+  if(result !== "SUCCESS"){
+    return {result: result, log: fileerror};
+  }
+  
+  console.log(fileoutput);
+  if(fileoutput !== givenProblem.testcase[i].output){
+    return {result: "WA", log: `wrong answer on testcase ${i+1}`, youroutput: fileoutput, output: givenProblem.testcase[i].output, input: givenProblem.testcase[i].input};
+  }
+  else{
+    return {result: "AC", log: `accepted`};
+  }
+}
+
+app.post('/submission', auth, async (req, res) => {
+  const userSubmission = req.body;
+  const databaseProblem = await db.collection('problems').find({}).toArray();
+  const givenProblem = databaseProblem.find(x => x.title === userSubmission.title);
+
+  for(let i=0; i<givenProblem.testcase.length; i++){
+    const testcaseResult = await runTestCase(userSubmission, givenProblem, i);
+    if(testcaseResult.result !== "AC"){
+      return res.status(200).json(testcaseResult);
+    }
+  }
+  res.status(200).json({result: "AC", log: "accept"});
 })
 
 const db = connectMongoDB();

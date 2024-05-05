@@ -5,13 +5,12 @@ const SetProblem = () => {
 
   const [problemTitle, typeProblemTitle] = useState("");
   const [problemDescription, typeProblemDescription] = useState("");
-  const [problemDifficulty, typeProblemDifficulty] = useState("");
-  const [problemInput, typeProblemInput] = useState("");
-  const [problemOutput, typeProblemOutput] = useState("");
+  const [problemDifficulty, typeProblemDifficulty] = useState("Easy");
   const [problemTestcaseInput, typeProblemTestcaseInput] = useState("");
   const [problemTestcaseOutput, typeProblemTestcaseOutput] = useState("");
+  const [testcase, setTestcase] = useState([]);
   const [problemMemLimit, typeProblemMemLimit] = useState("");
-  const [problemTimeLimit, typeProblemTimeLimit] = useState("");
+  const [problemTimeLimit, typeProblemTimeLimit] = useState("1");
   const [result, setResult] = useState("");
   
   const token = localStorage.getItem('token'); 
@@ -24,10 +23,7 @@ const SetProblem = () => {
         title: problemTitle,
         description: problemDescription,
         difficulty: problemDifficulty,
-        input: problemInput,
-        output: problemOutput,
-        testcaseinput: problemTestcaseInput,
-        testcaseoutput: problemTestcaseOutput,
+        testcase: testcase,
         memlimit: problemMemLimit,
         timelimit: problemTimeLimit,
       }),
@@ -41,7 +37,16 @@ const SetProblem = () => {
     setResult(json.msg);
     console.log(json);
     
-  } 
+  }
+  
+  const addTestcase = async () => {
+    setTestcase([...testcase, {
+        input: problemTestcaseInput,
+        output: problemTestcaseOutput
+      }
+    ]);
+    setResult(`Testcase ${testcase.length +1} added`)
+  }
 
   return (
     <div id="setproblem">
@@ -50,27 +55,25 @@ const SetProblem = () => {
       <table>
         <tbody>
           <tr>
+            <td>Title</td>
             <td>
-              Title
-            </td>
-            <td>
-              <textarea placeholder="title" onChange={(e)=> typeProblemTitle(e.target.value)}/>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              Description
-            </td>
-            <td>
-              <textarea placeholder="description" id="description-area" onChange={(e)=> typeProblemDescription(e.target.value)}/>
+              <textarea placeholder="title"
+              onChange={(e)=> typeProblemTitle(e.target.value)}/>
             </td>
           </tr>
           <tr>
+            <td>Description</td>
             <td>
-              Difficulty
+              <textarea placeholder="description, it is encouraged to add sample input and output for a problem"
+              id="description-area"
+              onChange={(e)=> typeProblemDescription(e.target.value)}/>
             </td>
+          </tr>
+          <tr>
+            <td>Difficulty</td>
             <td>
-              <select onChange={(e)=> typeProblemDifficulty(e.target.value)}>
+              <select
+              onChange={(e)=> typeProblemDifficulty(e.target.value)}>
                 <option>Easy</option>
                 <option>Medium</option>
                 <option>Hard</option>
@@ -78,43 +81,10 @@ const SetProblem = () => {
             </td>
           </tr>
           <tr>
+            <td>Time Limit (in s)</td>
             <td>
-              Input
-            </td>
-            <td>
-              <textarea placeholder="example input" className="io" onChange={(e)=> typeProblemInput(e.target.value)}/>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              Output
-            </td>
-            <td>
-              <textarea placeholder="example output" className="io" onChange={(e)=> typeProblemOutput(e.target.value)}/>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              Testcase Input
-            </td>
-            <td>
-              <textarea placeholder="testcase input" className="testcase" onChange={(e)=> typeProblemTestcaseInput(e.target.value)}/>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              Testcase Output<br/>separate every testcase output with a blank line
-            </td>
-            <td>
-              <textarea placeholder="testcase output" className="testcase" onChange={(e)=> typeProblemTestcaseOutput(e.target.value)}/>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              Time Limit (in s)
-            </td>
-            <td>
-              <select onChange={(e)=> typeProblemTimeLimit(e.target.value)}>
+              <select
+              onChange={(e)=> typeProblemTimeLimit(e.target.value)}>
                 <option>1</option>
                 <option>2</option>
                 <option>3</option>
@@ -134,16 +104,32 @@ const SetProblem = () => {
             </td>
           </tr>
           <tr>
+            <td>Memory Limit (in mb)</td>
             <td>
-              Memory Limit (in mb)
+              <textarea placeholder="memory limit (default 256mb)"
+              onChange={(e)=> typeProblemMemLimit(e.target.value)}/>
             </td>
+          </tr>
+          <tr>
+            <td>Testcase Input</td>
             <td>
-              <textarea placeholder="memory limit" onChange={(e)=> typeProblemMemLimit(e.target.value)}/>
+              <textarea placeholder="testcase input" className="testcase"
+              onChange={(e)=> typeProblemTestcaseInput(e.target.value)}/>
+            </td>
+          </tr>
+          <tr>
+            <td>Testcase Output</td>
+            <td>
+              <textarea placeholder="testcase output" className="testcase"
+              onChange={(e)=> typeProblemTestcaseOutput(e.target.value)}/>
             </td>
           </tr>
         </tbody>
       </table>
-      <button type="button" onClick={submitProblem}>submit</button>
+      <p>Each testcase should be added one at a time</p>
+      <button type="button" onClick={addTestcase}>Add Testcase</button>
+      <br/>
+      <button type="button" onClick={submitProblem}>Submit</button>
       <p>{result}</p>
     </div>
   )

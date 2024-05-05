@@ -9,6 +9,9 @@ const Problem = () => {
   const [logs, setLogs] = useState("");
   const [code, setCode] = useState("");
   const [result, setResult] = useState("");
+  const [output, setOutput] = useState("");
+  const [input, setInput] = useState("");
+  const [yourOutput, setYourOutput] = useState("");
   const location = useLocation();
   const nav = useNavigate();
   const token = localStorage.getItem('token');
@@ -41,7 +44,6 @@ const Problem = () => {
       body: JSON.stringify({
         'title': problem.title,
         'code': code,
-        'type': 'submit',
         'username': localStorage.getItem('username'),
       }),
     });
@@ -49,33 +51,23 @@ const Problem = () => {
     const received = await response.json();
     setResult(received.result);
     setLogs(received.log);
-  }
-
-  const onrun = async () => {
-    setResult("PENDING");
-    setLogs("LOGS");
-    const response = await fetch('http://144.144.144.144:3000/submission', {
-      method: "POST",
-      headers: {
-        authorization: token,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        'title': problem.title,
-        'code': code,
-        'type': 'run',
-        'username': localStorage.getItem('username'),
-      }),
-    });
-
-    const received = await response.json();
-    setResult(received.result);
-    setLogs(received.log);
+    setOutput(received.output);
+    setInput(received.input);
+    setYourOutput(received.youroutput);
   }
 
   useEffect(()=>{
     loadProblem();
   },[])
+
+  const getResultColor = () => {
+    if(result === "AC")
+      return "green";
+    else if(result === "PENDING")
+      return "white";
+    else
+      return "#af1a2a";
+  }
 
   return (
     <div id="problempage">
@@ -83,19 +75,18 @@ const Problem = () => {
         <h1>{problem.title}</h1>
         <h4>Description</h4>
         <pre>{problem.description}</pre>
-        <h4>Input</h4>
-        <pre>{problem.input}</pre>
-        <h4>Output</h4>
-        <pre>{problem.output}</pre>
       </div>
       <div id="right">
-        <h3>Code</h3>
         <textarea id="textarea" onChange={(e) => setCode(e.target.value)}></textarea><br/>
-        <button id="runbutton" onClick={onrun}>RUN</button>
-        &nbsp;
         <button id="submitbutton" onClick={onsubmit}>SUBMIT</button>
-        <p>RESULT<br/>{result}</p>
-        <p>LOGS<br/><pre>{logs}</pre></p>
+        <p style={{color: getResultColor()}}>{result}</p>
+        <p><pre>{logs}</pre></p>
+        <p>Input</p>
+        <p><pre>{input}</pre></p>
+        <p>Output</p>
+        <p><pre>{output}</pre></p>
+        <p>Your Output</p>
+        <p><pre>{yourOutput}</pre></p>
       </div>
     </div>
   )

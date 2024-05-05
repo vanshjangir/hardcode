@@ -11,7 +11,7 @@ body{
 }
 #textarea{
     height: 400px;
-    width: 100%;
+    width: 50vw;
     background-color: #121212;
     color: white;
     border: 1px solid white;
