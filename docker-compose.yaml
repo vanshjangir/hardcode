@@ -9,17 +9,6 @@ volumes:
   coderunnerfiles:
 
 services:
-  coderunner:
-    image: coderunner
-    build:
-      context: ./container/
-    networks:
-      hardcode-net:
-        ipv4_address: 144.144.144.122
-    ports:
-      - "8080:8080"
-    volumes:
-      - coderunnerfiles:/app/codefiles
   
   hardcodeserver:
     image: hardcodeserver
@@ -33,3 +22,15 @@ services:
     volumes:
       - coderunnerfiles:/app/codefiles
       - ./server:/app
+
+  coderunner:
+    image: coderunner
+    build:
+      context: ./container/
+    networks:
+      hardcode-net:
+        ipv4_address: 144.144.144.122
+    ports:
+      - "8080:8080"
+    volumes:
+      - coderunnerfiles:/app/codefiles

@@ -4,17 +4,19 @@ WORKDIR /app
 
 RUN mkdir /app/codefiles
 
+RUN mkdir /app/routes
+
+RUN mkdir /app/utils
+
 COPY package.json /app
 
 COPY package-lock.json /app
 
 RUN npm install
 
-COPY adminMiddleware.js /app
+COPY routes /app/routes
 
-COPY auth.js /app
-
-COPY prerun.js /app
+COPY utils /app/utils
 
 COPY index.js /app
 

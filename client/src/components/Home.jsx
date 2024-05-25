@@ -8,21 +8,37 @@ const Home = () => {
   const [problem, setProblem] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [username, setUsername] = useState("");
+  const [role, setRole] = useState("user");
   const nav = useNavigate();
 
-  const getProblem = async (id) => {
-    const response = await fetch(`http://144.144.144.144:3000/${id}`, {
+  const getProblem = async () => {
+    const response = await fetch(`http://144.144.144.144:3000`, {
       method: "GET",
     });
     
     const json = await response.json();
     setProblem(json);
+  }
 
+  const getRole = async () => {
+    const response = await fetch('http://144.144.144.144:3000/role', {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        "username": localStorage.getItem('username'),
+      })
+    })
+
+    const json = await response.json();
+    setRole(json.role);
   }
 
   const logout = async () => {
     localStorage.removeItem('username');
     localStorage.removeItem('token');
+    getRole();
     loginStatus();
   }
     
@@ -31,6 +47,7 @@ const Home = () => {
     if(user){
       setUsername(user);
       setIsLoggedIn(true);
+      getRole();
     }else{
       setIsLoggedIn(false);
     }
@@ -38,7 +55,7 @@ const Home = () => {
 
   useEffect(()=>{
     loginStatus();
-    getProblem(1);
+    getProblem();
   },[])
 
 
@@ -51,9 +68,7 @@ const Home = () => {
         <div id="navbar-buttons">
           {isLoggedIn ? (
             <>
-              <a href='' onClick={() => nav(`/profile/:{username}`)}>{username}</a>
-              &nbsp;
-              <button id='logoutbutton' onClick={logout}>logout</button>
+              <a href='' onClick={() => nav(`/profile/:{username}`)} id='profile'>{username}</a>
             </>
           ): (
             <>
@@ -67,33 +82,46 @@ const Home = () => {
       <br/>
       <div id='contest'>
         <button id='contestbutton' onClick={()=> nav('/contests')}>Contests</button>
-        &nbsp;
-        <button id='create-contestbutton' onClick={()=> nav('/createcontests')}>Create contest</button>
-        &nbsp;
-        <button id='setproblembutton' onClick={()=> nav('/setproblem')}>Set Problem</button>
+
+        {role === "admin" ? (
+          <>
+            &nbsp;
+            <button id='create-contestbutton' onClick={()=> nav('/createcontests')}>Create contest</button>
+            &nbsp;
+            <button id='setproblembutton' onClick={()=> nav('/setproblem')}>Set Problem</button>
+          </>
+        ): (
+          <></>
+        )}
+
+        {isLoggedIn ? (
+          <>
+            &nbsp;
+            <button id='logoutbutton' onClick={logout}>logout</button>
+          </>
+        ):(
+          <></>
+        )}
+
       </div>
       <br/>
       <h2>Problem Set</h2>
       <div id="problem-content">
-        <div id='pagebutton'>
-          <button onClick={() => getProblem(1)}>1</button>
-          <button onClick={() => getProblem(2)}>2</button>
-        </div>
         <div id="problem-cont">
           <table id="problem-table">
             <thead>
               <tr>
-                <td>Title</td>
-                <td>Difficulty</td>
+                <td><h3>Title</h3></td>
+                <td className='rightaligned'><h3>Difficulty</h3></td>
               </tr>
             </thead>
             <tbody>
               {problem.map((prob) => (
                 <tr key={prob.title}>
-                  <td onClick={() => {nav(`problem/${prob.title}`)}}>
+                  <td onClick={() => {nav(`problem/${prob.title}`)}} id='problemrow'>
                   <a href=''>{prob.title}</a>
                   </td>
-                  <td>{prob.difficulty}</td>
+                  <td className='rightaligned'>{prob.difficulty}</td>
                 </tr>
               ))}
             </tbody>

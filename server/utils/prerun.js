@@ -1,9 +1,10 @@
 const fs = require('fs')
 const net = require('net')
+require('dotenv').config()
 const {MongoClient} = require('mongodb')
 
 function connectMongoDB(){
-  const uri = "mongodb+srv://vansh:kWZ2MMhvZV2yJcst@hardcode.b6g1pwr.mongodb.net/?retryWrites=true&w=majority&appName=hardcode"
+  const uri = process.env.MONGODB_URI
   const client = new MongoClient(uri);
   const db = client.db('hardcode');
   return db;
@@ -12,9 +13,15 @@ function connectMongoDB(){
 
 function createDockerClient(dport, dhost){
   const docker_client = new net.Socket();
-  docker_client.connect(dport, dhost);
-  console.log("connected to docker client");
-  return docker_client;
+  try{
+    docker_client.connect(dport, dhost);
+    console.log("connected to docker client");
+    return docker_client;
+  }
+  catch(error){
+    console.log("Error in connection:", error);
+    return null;
+  }
 }
 
 function loadFiles(id){

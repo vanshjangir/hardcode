@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import './style/problempage.css'
 import '../index.css'
+import './style/problempage.css'
 
 const Problem = () => {
 
@@ -61,7 +61,7 @@ const Problem = () => {
   },[])
 
   const getResultColor = () => {
-    if(result === "AC")
+    if(result === "ACCEPTED")
       return "green";
     else if(result === "PENDING")
       return "white";
@@ -74,19 +74,29 @@ const Problem = () => {
       <div id="left">
         <h1>{problem.title}</h1>
         <h4>Description</h4>
-        <pre>{problem.description}</pre>
+        <div id="problemdescription">
+          <p>{problem.description}</p>
+        </div>
       </div>
       <div id="right">
         <textarea id="textarea" onChange={(e) => setCode(e.target.value)}></textarea><br/>
         <button id="submitbutton" onClick={onsubmit}>SUBMIT</button>
         <p style={{color: getResultColor()}}>{result}</p>
         <p><pre>{logs}</pre></p>
-        <p>Input</p>
-        <p><pre>{input}</pre></p>
-        <p>Output</p>
-        <p><pre>{output}</pre></p>
-        <p>Your Output</p>
-        <p><pre>{yourOutput}</pre></p>
+        <div id="statusbox">
+          <div id="status-input">
+            <p>Input</p>
+            <p>{input}</p>
+          </div> 
+          <div id="status-input">
+            <p>Output</p>
+            <p>{output}</p>
+          </div> 
+          <div id="status-input">
+            <p>Your Output</p>
+            <p>{yourOutput}</p>
+          </div> 
+        </div>
       </div>
     </div>
   )
