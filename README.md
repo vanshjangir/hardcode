@@ -20,3 +20,4 @@ Append harcodeserver or coderunner after build/up for only that service
 - [ ] Scaling the submission backend (horizontal)
 - [ ] Decent Frontend
 - [x] Memory Limit and Time Limit
+- [ ] SSL
