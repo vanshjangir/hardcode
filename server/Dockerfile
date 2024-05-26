@@ -14,6 +14,8 @@ COPY package-lock.json /app
 
 RUN npm install
 
+COPY .env /app
+
 COPY routes /app/routes
 
 COPY utils /app/utils

@@ -21,7 +21,6 @@ services:
       - "3000:3000"
     volumes:
       - coderunnerfiles:/app/codefiles
-      - ./server:/app
 
   coderunner:
     image: coderunner
