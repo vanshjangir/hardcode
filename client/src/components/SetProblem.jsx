@@ -17,7 +17,7 @@ const SetProblem = () => {
 
   const submitProblem = async () => {
     setResult("updating...");
-    const response = await fetch(`http://144.144.144.144:3000/setproblem`, {
+    const response = await fetch('http://ec2-54-83-104-83.compute-1.amazonaws.com/setproblem', {
       method: "POST",
       body: JSON.stringify({
         title: problemTitle,

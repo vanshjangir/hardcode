@@ -21,7 +21,7 @@ const Problem = () => {
       return nav('/login');
     }
 
-    const response = await fetch(`http://144.144.144.144:3000${location.pathname}`, {
+    const response = await fetch(`http://ec2-54-83-104-83.compute-1.amazonaws.com${location.pathname}`, {
       method: "GET",
       headers: {
         authorization: token,
@@ -35,7 +35,7 @@ const Problem = () => {
   const onsubmit = async () => {
     setResult("PENDING");
     setLogs("LOGS");
-    const response = await fetch('http://144.144.144.144:3000/submission', {
+    const response = await fetch('http://ec2-54-83-104-83.compute-1.amazonaws.com/submission', {
       method: "POST",
       headers: {
         authorization: token,

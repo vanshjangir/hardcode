@@ -8,7 +8,7 @@ const CreateContest = () => {
   const [cDuration, setCDuration] = useState("");
 
   const submit = () => {
-    const response = fetch('http://144.144.144.144:3000/createcontest', {
+    const response = fetch('http://ec2-54-83-104-83.compute-1.amazonaws.com/createcontest', {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

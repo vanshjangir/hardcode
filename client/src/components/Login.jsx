@@ -9,7 +9,7 @@ const Login = () => {
   const nav = useNavigate();
 
   const submit = async () => {
-    const response = await fetch('http://144.144.144.144:3000/login', {
+    const response = await fetch('http://ec2-54-83-104-83.compute-1.amazonaws.com/login', {
       method: "POST",
       headers: {
         'Content-Type': 'application/json',
