@@ -12,7 +12,7 @@ const Home = () => {
   const nav = useNavigate();
 
   const getProblem = async () => {
-    const response = await fetch('http://ec2-54-83-104-83.compute-1.amazonaws.com', {
+    const response = await fetch('http://54.147.52.167:3000', {
       method: "GET",
     });
     
@@ -21,7 +21,7 @@ const Home = () => {
   }
 
   const getRole = async () => {
-    const response = await fetch('http://ec2-54-83-104-83.compute-1.amazonaws.com/role', {
+    const response = await fetch('http://54.147.52.167:3000/role', {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
