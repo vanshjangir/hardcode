@@ -21,6 +21,7 @@ services:
       - "3000:3000"
     volumes:
       - coderunnerfiles:/app/codefiles
+      - ./server:/app
 
   coderunner:
     image: coderunner
@@ -33,3 +34,12 @@ services:
       - "8080:8080"
     volumes:
       - coderunnerfiles:/app/codefiles
+  
+  client:
+    image: client
+    build:
+      context: ./client/
+    ports:
+      - "80:5173"
+    volumes:
+    - ./client:/app
