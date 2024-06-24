@@ -1,39 +1,27 @@
 networks:
   hardcode-net:
     driver: bridge
-    ipam:
-      config:
-        - subnet: 144.144.144.0/24
-
-volumes:
-  coderunnerfiles:
 
 services:
-  
-  hardcodeserver:
-    image: hardcodeserver
+  server:
+    image: server
     build:
       context: ./server/
     networks:
-      hardcode-net:
-        ipv4_address: 144.144.144.144
+      - hardcode-net
     ports:
       - "3000:3000"
     volumes:
-      - coderunnerfiles:/app/codefiles
       - ./server:/app
-
-  coderunner:
-    image: coderunner
+  
+  judge:
+    image: judge
     build:
-      context: ./container/
+      context: ./codejudge/
     networks:
-      hardcode-net:
-        ipv4_address: 144.144.144.122
-    ports:
-      - "8080:8080"
+      - hardcode-net
     volumes:
-      - coderunnerfiles:/app/codefiles
+      - ./codejudge:/app
   
   client:
     image: client
@@ -43,3 +31,11 @@ services:
       - "80:5173"
     volumes:
     - ./client:/app
+
+  rabbitmq:
+    image: rabbitmq:3.13-management
+    networks:
+      - hardcode-net
+    ports:
+      - "5672:5672"
+      - "15672:15672"

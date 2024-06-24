@@ -1,6 +1,5 @@
-const fs = require('fs')
-const net = require('net')
 require('dotenv').config()
+const amqp = require('amqplib/callback_api')
 const {MongoClient} = require('mongodb')
 
 function connectMongoDB(){
@@ -10,29 +9,27 @@ function connectMongoDB(){
   return db;
 }
 
+function connectToRabbitmq(){
 
-function createDockerClient(dport, dhost){
-  const docker_client = new net.Socket();
-  try{
-    docker_client.connect(dport, dhost);
-    console.log("connected to docker client");
-    return docker_client;
-  }
-  catch(error){
-    console.log("Error in connection:", error);
-    return null;
-  }
-}
-
-function loadFiles(id){
-  fs.writeFileSync(`./codefiles/usercode_${id}.cpp`, '', 'utf8');
-  fs.writeFileSync(`./codefiles/useroutput_${id}.txt`, '', 'utf8');
-  fs.writeFileSync(`./codefiles/input_${id}.txt`, '', 'utf8');
-  fs.writeFileSync(`./codefiles/error_${id}.txt`, '', 'utf8');
+  return new Promise((resolve, reject) => {
+    amqp.connect('amqp://localhost', async function(err, connection){
+      if(err){
+        throw err;
+      }
+      connection.createChannel( async function(err1, channel){
+        if(err1){
+          reject(null);
+          console.log("Connection to Rabbitmq unsuccessful")
+        }else{
+          console.log("Connection to Rabbitmq successful")
+          resolve(channel);
+        }
+      })
+    })
+  })
 }
 
 module.exports = {
-  createDockerClient: createDockerClient,
   connectMongoDB: connectMongoDB,
-  loadFiles
+  connectToRabbitmq,
 };

@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <unistd.h>
@@ -11,25 +12,15 @@
 
 using namespace std;
 
-void out(int c_socket, string s, int len, int status){
-    send(c_socket, s.c_str(), len, 0);
-    close(c_socket);
-    cout << s << endl;
-    cout << "exiting with: " << status << endl;
+void out(string s, int statusCode){
+    ofstream file("STATUS");
+    file << s;
     fflush(stdout);
 }
 
-void parse(char buffer[], char id[], char timeMAX[], char memMAX[]){
+void parse(const char buffer[], char timeMAX[], char memMAX[]){
 
     int c=0;
-    for(int i=0;;i++){
-        id[i] = buffer[c];
-        if(buffer[c] == '\0'){
-            c++;
-            break;
-        }
-        c++;
-    }
     for(int i=0;;i++){
         timeMAX[i] = buffer[c];
         if(buffer[c] == '\0'){
@@ -49,11 +40,10 @@ void parse(char buffer[], char id[], char timeMAX[], char memMAX[]){
 
 }
 
-void run(int c_socket){
+void run(){
     int rc;
     pid_t pid;
-    char id[64];
-    char buffer[100];
+    string buffer;
     char timeMAX[5];
     char memMAX[5];
     char compileCommand[256];
@@ -62,31 +52,25 @@ void run(int c_socket){
     char useroutput[100];
     char error[100];
 
-    rc = recv(c_socket, buffer, sizeof(buffer), 0);
-    parse(buffer, id, timeMAX, memMAX);
+    ifstream file("META");
+    getline(file, buffer);
+    parse(buffer.c_str(), timeMAX, memMAX);
 
-    if(rc <= 0){
-        return;
-    }else{
-        printf("received id: %s\n", id);
-    }
-
-    snprintf(compileCommand, 256, "g++ codefiles/usercode_%s.cpp \
-            -o codefiles/usercode_%s 2> codefiles/error_%s.txt", id, id, id);
-    snprintf(execute, 100, "./codefiles/usercode_%s", id);
-    snprintf(input, 100, "codefiles/input_%s.txt", id);
-    snprintf(useroutput, 100, "codefiles/useroutput_%s.txt", id);
-    snprintf(error, 100, "codefiles/error_%s.txt", id);
+    snprintf(compileCommand, 256, "g++ usercode.cpp -o usercode 2> ERROR");
+    snprintf(execute, 100, "./usercode");
+    snprintf(input, 100, "INPUT");
+    snprintf(useroutput, 100, "OUTPUT");
+    snprintf(error, 100, "ERROR");
 
     rc = system(compileCommand);
     if(rc != 0){
-        out(c_socket, "COMPILATION_ERROR", 17, 0);
+        out("COMPILATION_ERROR", 0);
         return;
     }
 
     pid = fork();
     if(pid == -1){
-        out(c_socket, "INTERNAL_ERROR", 14, 0);
+        out("INTERNAL_ERROR", 0);
         return;
     }
     else if(pid == 0){
@@ -135,13 +119,13 @@ void run(int c_socket){
             cout << "EXITED\n";
 
             if(exitStatus == SUCCESSFUL){
-                out(c_socket, "SUCCESS", 7, exitStatus);
+                out("SUCCESS", exitStatus);
             }
             else if(exitStatus == INTERNAL_SERVER_ERROR){
-                out(c_socket, "INTERNAL_ERROR", 14, exitStatus);
+                out("INTERNAL_ERROR", exitStatus);
             }
             else{
-                out(c_socket, "RUNTIME_ERROR", 13, exitStatus);
+                out("RUNTIME_ERROR", exitStatus);
             }
         }
         else if(WIFSIGNALED(status)){
@@ -149,13 +133,13 @@ void run(int c_socket){
             cout << "SIGNALED\n";
             
             if(signal == SIGSEGV){
-                out(c_socket, "MEMORY_LIMIT_EXCEEDED", 21, signal);
+                out("MEMORY_LIMIT_EXCEEDED", signal);
             }
             else if(signal == SIGXCPU){
-                out(c_socket, "TIME_LIMIT_EXCEEDED", 19, signal);
+                out("TIME_LIMIT_EXCEEDED", signal);
             }
             else{
-                out(c_socket, "SOMETHING_ELSE", 14, signal);
+                out("SOMETHING_ELSE", signal);
             }
         }
     }
@@ -163,54 +147,6 @@ void run(int c_socket){
 
 int main(int argc, char **argv){
 
-    int s_socket;
-    struct sockaddr_in s_addr;
-
-    s_socket = socket(AF_INET, SOCK_STREAM, 0);
-    if(s_socket == -1){
-        cout << "error creating socket\n";
-        fflush(stdout);
-        return -1;
-    }
-
-    s_addr.sin_family = AF_INET;
-    s_addr.sin_addr.s_addr = htonl(INADDR_ANY);
-    s_addr.sin_port = htons(8080);
-
-    if(bind(s_socket, (struct sockaddr*)&s_addr, sizeof(s_addr)) == -1){
-        close(s_socket);
-        cout << "binding error\n";
-        fflush(stdout);
-        return -1;
-    }
-
-    if(listen(s_socket, 100) == -1){
-        close(s_socket);
-        cout << "listening error\n";
-        fflush(stdout);
-        return -1;
-    }
-
-    cout << "listening...\n";
-    fflush(stdout);
-
-    while(1){
-        int c_socket;
-        struct sockaddr_in c_addr;
-        socklen_t c_addr_len = sizeof(c_addr);
-        
-        c_socket = accept(s_socket, (struct sockaddr*)&c_addr, &c_addr_len);
-        if(c_socket == -1){
-            cout << "connection failed\n";
-            fflush(stdout);
-            close(c_socket);
-            continue;
-        }else{
-            cout << "connection established\n";
-            fflush(stdout);
-        }
-
-        run(c_socket);
-    }
+    run();
     return 0;
 }
