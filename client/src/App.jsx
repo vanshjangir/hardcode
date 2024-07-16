@@ -7,6 +7,7 @@ import SetProblem from './components/SetProblem.jsx'
 import Contests from './components/Contests.jsx'
 import CreateContest from './components/CreateContest.jsx'
 import Profile from './components/Profile.jsx'
+import Submissions from './components/Submissions.jsx'
 
 
 const App = () => {
@@ -22,6 +23,7 @@ const App = () => {
         <Route path = "/contests" element={<Contests />}></Route>
         <Route path = "/createcontests" element={<CreateContest />}></Route>
         <Route path = "/profile/:username" element={<Profile />}></Route>
+        <Route path = "/submissions/:username" element={<Submissions />}></Route>
       </Routes>
     </Router>
   );

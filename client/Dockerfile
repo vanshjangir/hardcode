@@ -28,4 +28,6 @@ COPY src/index.css /app/src
 
 COPY src/components /app/src/components
 
+COPY .env /app
+
 CMD ["npm", "run", "dev"]

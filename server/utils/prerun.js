@@ -12,7 +12,7 @@ function connectMongoDB(){
 function connectToRabbitmq(){
 
   return new Promise((resolve, reject) => {
-    amqp.connect('amqp://localhost', async function(err, connection){
+    amqp.connect('amqp://rabbitmq', async function(err, connection){
       if(err){
         throw err;
       }

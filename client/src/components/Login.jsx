@@ -1,15 +1,17 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom";
 import '../index.css'
+import './style/login.css'
 const Login = () => {
 
+  const api = import.meta.env.VITE_API_URL
   const [Uemail, setEmail] = useState("");
   const [Upassword, setPassword] = useState("");
   const [loginResponse, setLoginResponse] = useState("");
   const nav = useNavigate();
 
   const submit = async () => {
-    const response = await fetch('http://54.147.52.167:3000/login', {
+    const response = await fetch(api+'/login', {
       method: "POST",
       headers: {
         'Content-Type': 'application/json',
@@ -33,14 +35,16 @@ const Login = () => {
   }
 
   return (
-    <div>
-      <input placeholder="email" id="loginpage-input-email" onChange={(e) => setEmail(e.target.value)}/>
-      <br/>
-      <input placeholder="password" id="loginpage-input-password" onChange={(e) => setPassword(e.target.value)}/>
-      <br/>
-      <button type="button" onClick={submit}>Submit</button>
-      <br/>
-      {loginResponse}
+    <div id="login">
+      <div id="login-cont">
+        <input placeholder="email" id="loginpage-input-email" onChange={(e) => setEmail(e.target.value)}/>
+        <br/>
+        <input placeholder="password" id="loginpage-input-password" onChange={(e) => setPassword(e.target.value)}/>
+        <br/>
+        <button type="button" onClick={submit}>Submit</button>
+        <br/>
+        {loginResponse}
+      </div>
     </div>
   )
 }

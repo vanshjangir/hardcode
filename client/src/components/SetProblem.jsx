@@ -1,8 +1,10 @@
 import { useState } from "react";
 import './style/setproblem.css'
+import { useNavigate } from "react-router-dom";
 
 const SetProblem = () => {
 
+  const api = import.meta.env.VITE_API_URL
   const [problemTitle, typeProblemTitle] = useState("");
   const [problemDescription, typeProblemDescription] = useState("");
   const [problemDifficulty, typeProblemDifficulty] = useState("Easy");
@@ -12,12 +14,13 @@ const SetProblem = () => {
   const [problemMemLimit, typeProblemMemLimit] = useState("");
   const [problemTimeLimit, typeProblemTimeLimit] = useState("1");
   const [result, setResult] = useState("");
+  const nav = useNavigate();
   
   const token = localStorage.getItem('token'); 
 
   const submitProblem = async () => {
     setResult("updating...");
-    const response = await fetch('http://54.147.52.167:3000/setproblem', {
+    const response = await fetch(api+'/setproblem', {
       method: "POST",
       body: JSON.stringify({
         title: problemTitle,
@@ -36,7 +39,6 @@ const SetProblem = () => {
     const json = await response.json();
     setResult(json.msg);
     console.log(json);
-    
   }
   
   const addTestcase = async () => {
@@ -127,9 +129,11 @@ const SetProblem = () => {
         </tbody>
       </table>
       <p>Each testcase should be added one at a time</p>
-      <button type="button" onClick={addTestcase}>Add Testcase</button>
-      <br/>
-      <button type="button" onClick={submitProblem}>Submit</button>
+      <div id="actionbuttons">
+        <button type="button" onClick={addTestcase}>Add Testcase</button>
+        <button type="button" onClick={submitProblem}>Submit</button>
+        <button type="button" onClick={() => {nav(-1)}}>Back</button>
+      </div>
       <p>{result}</p>
     </div>
   )

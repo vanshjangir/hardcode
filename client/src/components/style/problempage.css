@@ -9,26 +9,59 @@
 #textarea{
     height: 400px;
     width: 50vw;
-    background-color: #121212;
+    background-color: #202020;
     color: white;
-    border: 1px solid white;
+    border: 2px solid #121212;
     border-radius: 4px;
     font-family: 'Courier New', Courier, monospace;
-    font-size: 18px;
+    font-size: 16px;
+    padding-top: 4px;
+    padding-left: 4px;
 }
 
 #statusbox{
     display: flex;
+    border: 2px solid #121212;
+    border-radius: 4px;
+    height: 265px;
+    width: 50vw;
+    overflow-y: auto;
+    overflow-x: scroll;
+    font-size: 14px;
+}
+#submitstatus{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-bottom: 4px;
 }
 
 #statusbox >* {
     width: 100%;
     text-align: left;
+    padding-left: 8px;
 }
 
 #problemdescription{
     font-family: 'Courier New', Courier, monospace;
 }
+
+.problemheader{
+    font-weight: bold;
+}
+
 p{
     white-space-collapse: preserve-breaks;
+}
+
+#submitbutton{
+    border: 1px solid white;
+}
+
+#left{
+    background-color: #202020;
+    margin-right: 10px;
+    padding: 4px 4px 4px 4px;
+    border: 2px solid #121212;
+    border-radius: 4px;
 }

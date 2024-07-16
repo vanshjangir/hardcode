@@ -1,3 +1,7 @@
+:root{
+    --page-width: 60%;
+}
+
 #homepage{
     display: flex;
     flex-direction: column;
@@ -6,15 +10,13 @@
 
 #navbar{
     display: flex;
-    width: 60%;
-    justify-content: space-around;
+    width: var(--page-width);
+    justify-content: space-between;
     align-items: center;
     border-bottom: 1px solid white;
 }
 #navbar-buttons{
     display: flex;
-    width: 100%;
-    justify-content: right;
 }
 #navbar-title{
     display: flex;
@@ -24,20 +26,14 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 60%;
 }
 #pagebutton{
-    width: 60%;
+    width: var(--page-width);
     align-items: left;
 }
-#problem-cont{
-    width: 60%;
-}
-#problem-table{
-    width: 100%;
-    table-layout: fixed;
-}
 #contest{
-    width: 60%;
+    width: var(--page-width);
     align-items: left;
 }
 
@@ -46,29 +42,61 @@
 }
 
 #problemrow{
-    transition: 0.2s;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    font-size: 20px;
 }
 
-#problemrow:hover *{
-    color: #181818;
-    background-color: white;
-    border-radius: 4px;
-    transition: 0.2s;
+#problemtitle:hover{
+    text-decoration: underline;
+}
+
+.rownum0{
+    background-color: #202020;
 }
 
 #profile{
     padding: 4px;
-    border: 1px solid white;
+    border: 0px solid #181818;
     border-radius: 4px;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    border: 1px solid #181818;
 }
 
 #profile:hover{
-    color: #181818;
-    background-color: white;
+    border: 1px solid white;
 }
 
 table{
     padding: 4px;
     border: 1px solid white;
     border-radius: 4px;
+}
+
+#hardcode-logo{
+    color: #0b659f;
+}
+#profile-logo{
+    height: 30px;
+}
+#profile-cont{
+    display: flex;
+    align-items: center;
+}
+.easy{
+    color: #00b8a3;
+}
+.hard{
+    color: #ff375f;
+}
+.medium{
+    color: #ffc01e;
+}
+
+@media screen and (max-width: 600px){
+    :root{
+        --page-width: 100%;
+    }
 }

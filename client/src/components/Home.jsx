@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
   
+  const api = import.meta.env.VITE_API_URL
   const [problem, setProblem] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [username, setUsername] = useState("");
@@ -12,7 +13,7 @@ const Home = () => {
   const nav = useNavigate();
 
   const getProblem = async () => {
-    const response = await fetch('http://54.147.52.167:3000', {
+    const response = await fetch(api, {
       method: "GET",
     });
     
@@ -21,7 +22,7 @@ const Home = () => {
   }
 
   const getRole = async () => {
-    const response = await fetch('http://54.147.52.167:3000/role', {
+    const response = await fetch(api+'/role', {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -63,13 +64,14 @@ const Home = () => {
     <div id="homepage">
       <div id="navbar">
         <div id="navbar-title">
-          <h3>HardCode</h3>
+          <h1 id='hardcode-logo'>HardCode</h1>
         </div>
         <div id="navbar-buttons">
           {isLoggedIn ? (
-            <>
-              <a href='' onClick={() => nav(`/profile/:{username}`)} id='profile'>{username}</a>
-            </>
+            <div id='profile-cont'>
+              <img id='profile-logo' src='/profile.png'/>
+              <a href='' onClick={() => nav(`/profile/:${username}`)} id='profile'>{username.toUpperCase()}</a>
+            </div>
           ): (
             <>
               <button id="loginbutton" onClick={()=> nav('/login')}>login</button>
@@ -97,6 +99,7 @@ const Home = () => {
         {isLoggedIn ? (
           <>
             &nbsp;
+            <button id='submissionsbutton' onClick={()=> nav(`/submissions/:${username}`)}>Submissions</button>
             <button id='logoutbutton' onClick={logout}>logout</button>
           </>
         ):(
@@ -107,26 +110,16 @@ const Home = () => {
       <br/>
       <h2>Problem Set</h2>
       <div id="problem-content">
-        <div id="problem-cont">
-          <table id="problem-table">
-            <thead>
-              <tr>
-                <td><h3>Title</h3></td>
-                <td className='rightaligned'><h3>Difficulty</h3></td>
-              </tr>
-            </thead>
-            <tbody>
-              {problem.map((prob) => (
-                <tr key={prob.title}>
-                  <td onClick={() => {nav(`problem/${prob.title}`)}} id='problemrow'>
-                  <a href=''>{prob.title}</a>
-                  </td>
-                  <td className='rightaligned'>{prob.difficulty}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        {problem.map((prob, index) => (
+          <div id='problemrow' className={`rownum${index%2}`}>
+            <div id='problemtitle' onClick={() => {nav(`problem/${prob.title}`)}}>
+              <a href=''>{prob.title}</a>
+            </div>
+            <div className={`${prob.difficulty.toLowerCase()}`}>
+              {prob.difficulty}
+            </div>
+          </div>
+        ))}
       </div>
     </div>
 

@@ -3,6 +3,7 @@ import "./style/createcontest.css"
 
 const CreateContest = () => {
 
+  const api = import.meta.env.VITE_API_URL
   const [cID, setCID] = useState("");
   const [cName, setCName] = useState("");
   const [cDuration, setCDuration] = useState("");
