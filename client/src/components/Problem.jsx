@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { Editor } from "@monaco-editor/react";
 import '../index.css'
 import './style/problempage.css'
 
@@ -9,7 +10,7 @@ const Problem = () => {
   const [problem, setProblem] = useState("");
   const [logs, setLogs] = useState("");
   const [code, setCode] = useState("");
-  const [result, setResult] = useState("RESULT");
+  const [result, setResult] = useState("");
   const [output, setOutput] = useState("");
   const [input, setInput] = useState("");
   const [yourOutput, setYourOutput] = useState("");
@@ -92,15 +93,21 @@ const Problem = () => {
         </div>
       </div>
       <div id="right">
-        <textarea id="textarea" placeholder="write your cpp code here" onChange={(e) => setCode(e.target.value)}></textarea><br/>
+        <Editor
+          height="80vh"
+          defaultLanguage="cpp"
+          defaultValue="// Write you code here (cpp)"
+          theme="vs-dark"
+          onChange={(value) => {setCode(value)}}
+        />
         <div id="submitstatus">
           <button id="submitbutton" onClick={onsubmit}>SUBMIT</button>
           <p style={{color: getResultColor()}}><b>{result}</b></p>
         </div>
         <div id="statusbox">
-          {
-            (result === "ACCEPTED" || result === "WRONG ANSWER") ? (
-              <>
+        {
+          (result === "ACCEPTED" || result === "WRONG ANSWER") ? (
+            <>
               <div id="status-input">
                 <p>Input</p>
                 <p>{input}</p>
@@ -113,13 +120,13 @@ const Problem = () => {
                 <p>Your Output</p>
                 <p>{yourOutput}</p>
               </div> 
-              </>
-            ):(
-              <div>
-                <p><pre>{logs}</pre></p>
-              </div>
-            )
-          }
+            </>
+          ) : result === "COMPILATION_ERROR" ? (
+            <div>
+              <p id="errorLogs"><pre>{logs}</pre></p>
+            </div>
+          ) : null
+        }
         </div>
       </div>
     </div>

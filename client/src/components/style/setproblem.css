@@ -1,18 +1,105 @@
-#setproblem{
+:root {
+    --setp-page-width: 80%;
+    --bg-dark: #1f1f1f;
+    --bg-light: #2a2a2a;
+    --bg-editor: #202020;
+    --primary-color: #0b659f;
+    --success-color: #00b8a3;
+    --error-color: #ff375f;
+    --pending-color: #ffc01e;
+    --input-bg: #303030;
+    --input-border: #3a3a3a;
+}
+
+#setproblem {
     display: flex;
     flex-direction: column;
-    width: 100%;
     align-items: center;
+    width: var(--setp-page-width);
+    margin: 20px auto;
+    background-color: var(--bg-dark);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
-textarea{
-    width: 500px;
+
+#setproblem h2 {
+    color: var(--primary-color);
+    font-size: 28px;
+    margin-bottom: 20px;
 }
-#description-area{
-    height: 200px;
+
+#setproblem p {
+    color: white;
+    margin-bottom: 20px;
+    font-size: 16px;
 }
-.io{
+
+table {
+    width: 100%;
+    color: white;
+    margin-bottom: 20px;
+}
+
+td {
+    padding: 10px;
+    vertical-align: top;
+}
+
+textarea, select {
+    width: 100%;
+    background-color: var(--input-bg);
+    color: white;
+    border: 1px solid var(--input-border);
+    padding: 10px;
+    border-radius: 6px;
+    font-size: 16px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+textarea::placeholder, select {
+    color: #bfbfbf;
+}
+
+#description-area {
+    height: 150px;
+}
+
+.testcase {
     height: 100px;
 }
-.testcase{
-    height: 150px;
+
+#actionbuttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+button {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #0a507d;
+}
+
+#result {
+    color: var(--success-color);
+    margin-top: 10px;
+    font-size: 18px;
+}
+
+button[type="button"]:last-child {
+    background-color: var(--error-color);
+}
+
+button[type="button"]:last-child:hover {
+    background-color: #b02e4a;
 }

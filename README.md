@@ -22,6 +22,6 @@ It can be scaled by just adding more judge servers.
 ### TODO
 - [ ] Multi Language Support (currently only supports cpp submissions)
 - [x] Scaling the submission backend
-- [ ] Decent Frontend
+- [x] Decent Frontend
 - [x] Memory Limit and Time Limit
 - [ ] SSL

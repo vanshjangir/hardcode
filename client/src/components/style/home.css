@@ -1,102 +1,170 @@
-:root{
-    --page-width: 60%;
+:root {
+    --page-width: 70%;
+    --primary-color: #0b659f;
+    --background-dark: #1f1f1f;
+    --background-light: #2d2d2d;
+    --button-bg: #0b659f;
+    --button-hover: #1f1f1f;
 }
 
-#homepage{
+body {
+    background-color: #181818;
+    color: #ffffff;
+    font-family: 'Roboto', sans-serif;
+}
+
+#homepage {
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding: 20px;
 }
 
-#navbar{
+#navbar {
     display: flex;
-    width: var(--page-width);
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid white;
+    width: var(--page-width);
+    padding: 10px;
 }
-#navbar-buttons{
+
+#navbar-title h1 {
+    color: var(--primary-color);
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 28px;
+    margin: 0;
+}
+
+#navbar-buttons {
     display: flex;
+    gap: 15px;
 }
-#navbar-title{
+
+#navbar-buttons button {
+    background-color: var(--button-bg);
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#navbar-buttons button:hover {
+    background-color: var(--button-hover);
+}
+
+#contest {
+    width: var(--page-width);
     display: flex;
-    width: 100%;
+    margin-top: 20px;
 }
-#problem-content{
+
+#contest button {
+    background-color: var(--button-bg);
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#contest button:hover {
+    background-color: var(--button-hover);
+}
+
+#problem-content {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    width: 60%;
-}
-#pagebutton{
     width: var(--page-width);
-    align-items: left;
-}
-#contest{
-    width: var(--page-width);
-    align-items: left;
+    margin-top: 30px;
 }
 
-.rightaligned{
-    text-align: right;
-}
-
-#problemrow{
+#problemrow {
     display: flex;
     justify-content: space-between;
-    width: 100%;
-    font-size: 20px;
+    align-items: center;
+    padding: 15px 20px;
+    background-color: var(--background-dark);
+    border-radius: 8px;
+    margin-bottom: 10px;
+    transition: background-color 0.3s ease;
 }
 
-#problemtitle:hover{
+#problemrow:hover {
+    background-color: var(--background-light);
+}
+
+#problemtitle {
+    cursor: pointer;
+    font-size: 18px;
+    color: #ffffff;
+}
+
+#problemtitle:hover {
     text-decoration: underline;
 }
 
-.rownum0{
-    background-color: #202020;
-}
-
-#profile{
-    padding: 4px;
-    border: 0px solid #181818;
-    border-radius: 4px;
-    font-family: 'Courier New', Courier, monospace;
+.easy {
+    color: #00b8a3;
     font-weight: bold;
-    border: 1px solid #181818;
 }
 
-#profile:hover{
-    border: 1px solid white;
+.medium {
+    color: #ffc01e;
+    font-weight: bold;
 }
 
-table{
-    padding: 4px;
-    border: 1px solid white;
-    border-radius: 4px;
+.hard {
+    color: #ff375f;
+    font-weight: bold;
 }
 
-#hardcode-logo{
-    color: #0b659f;
-}
-#profile-logo{
-    height: 30px;
-}
-#profile-cont{
+#profile-cont {
     display: flex;
     align-items: center;
-}
-.easy{
-    color: #00b8a3;
-}
-.hard{
-    color: #ff375f;
-}
-.medium{
-    color: #ffc01e;
+    gap: 10px;
 }
 
-@media screen and (max-width: 600px){
-    :root{
-        --page-width: 100%;
+#profile-logo {
+    height: 40px;
+    border-radius: 50%;
+}
+
+#profile {
+    background-color: #0b659f;
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#profile:hover {
+    background-color: #1f1f1f;
+}
+
+@media screen and (max-width: 800px) {
+    :root {
+        --page-width: 95%;
+    }
+
+    #navbar {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    #contest {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+
+    #problem-content {
+        width: 100%;
     }
 }

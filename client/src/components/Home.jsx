@@ -100,6 +100,7 @@ const Home = () => {
           <>
             &nbsp;
             <button id='submissionsbutton' onClick={()=> nav(`/submissions/:${username}`)}>Submissions</button>
+            &nbsp;
             <button id='logoutbutton' onClick={logout}>logout</button>
           </>
         ):(
