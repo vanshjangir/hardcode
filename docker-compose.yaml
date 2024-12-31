@@ -33,7 +33,7 @@ services:
     - ./client:/app
 
   rabbitmq:
-    image: rabbitmq:3.13-management
+    image: rabbitmq:alpine
     networks:
       - hardcode-net
     ports:

@@ -1,1 +1,2 @@
-hardcodeserver.pem
+*.pem
+tempcompose.yaml

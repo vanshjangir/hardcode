@@ -1,12 +1,10 @@
-FROM ubuntu:latest
+FROM node:alpine
 
 WORKDIR /app
 
 RUN mkdir /app/run
 
-RUN apt-get update && apt-get install -y \
-    nodejs \
-    npm
+RUN apk add --no-cache gcc g++
 
 RUN touch run/INPUT \
     run/OUTPUT \

@@ -55,7 +55,7 @@ amqp.connect('amqp://rabbitmq', function(err, connection){
 
 async function testCode(output){
   return new Promise((resolve, reject) => {
-    exec("./main", {cwd: '/app/run/'}, (err) => {
+    exec("/app/run/main", {cwd: '/app/run/'}, (err) => {
       if (err) {
         console.error(err);
         reject(null);
