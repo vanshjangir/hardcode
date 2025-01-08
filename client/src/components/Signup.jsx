@@ -30,7 +30,7 @@ const Signup = () => {
     
     const json = await response.json();
     if(response.status === 200){
-      nav(-1);
+      nav("/");
     }else{
       setSignupResponse(json.msg)
     }

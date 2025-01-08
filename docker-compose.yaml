@@ -28,12 +28,14 @@ services:
     build:
       context: ./client/
     ports:
-      - "80:5173"
+      - "5173:5173"
     volumes:
     - ./client:/app
 
   rabbitmq:
-    image: rabbitmq:alpine
+    image: rabbitmq_custom
+    build:
+      context: ./rabbitmq/
     networks:
       - hardcode-net
     ports:

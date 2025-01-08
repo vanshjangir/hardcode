@@ -27,7 +27,7 @@ const Login = () => {
     if(status === 200){
       localStorage.setItem("token", json.token);
       localStorage.setItem("username", Uemail);
-      nav(-1);
+      nav("/");
     }
     else{
       setLoginResponse(json.msg);
