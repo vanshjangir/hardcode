@@ -95,8 +95,8 @@ const Problem = () => {
       <div id="right">
         <Editor
           height="80vh"
-          defaultLanguage="cpp"
-          defaultValue="// Write you code here (cpp)"
+          defaultLanguage="python"
+          defaultValue="# Write you code here (python)"
           theme="vs-dark"
           onChange={(value) => {setCode(value)}}
         />
@@ -121,7 +121,7 @@ const Problem = () => {
                 <p>{yourOutput}</p>
               </div> 
             </>
-          ) : result === "COMPILATION_ERROR" ? (
+          ) : result === "COMPILATION_ERROR" || result === "RUNTIME_ERROR" ? (
             <div>
               <p id="errorLogs"><pre>{logs}</pre></p>
             </div>

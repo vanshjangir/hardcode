@@ -46,7 +46,6 @@ void run(){
     string buffer;
     char timeMAX[5];
     char memMAX[5];
-    char compileCommand[256];
     char execute[100];
     char input[100];
     char useroutput[100];
@@ -56,17 +55,10 @@ void run(){
     getline(file, buffer);
     parse(buffer.c_str(), timeMAX, memMAX);
 
-    snprintf(compileCommand, 256, "g++ usercode.cpp -o usercode 2> ERROR");
-    snprintf(execute, 100, "./usercode");
+    snprintf(execute, 100, "python3 usercode.py");
     snprintf(input, 100, "INPUT");
     snprintf(useroutput, 100, "OUTPUT");
     snprintf(error, 100, "ERROR");
-
-    rc = system(compileCommand);
-    if(rc != 0){
-        out("COMPILATION_ERROR", 0);
-        return;
-    }
 
     pid = fork();
     if(pid == -1){
@@ -102,7 +94,7 @@ void run(){
         setrlimit(RLIMIT_AS, &memLimit);
         setrlimit(RLIMIT_CPU, &timeLimit);
 
-        rc = execlp(execute, execute, NULL);
+        rc = execlp("python3", "python3", "usercode.py", NULL);
         if(rc == -1){
             perror("execl failed");
             exit(INTERNAL_SERVER_ERROR);

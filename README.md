@@ -20,7 +20,7 @@ The client sends the request to the server with code and additional data. The se
 It can be scaled by just adding more judge servers.
 
 ### TODO
-- [ ] Multi Language Support (currently only supports cpp submissions)
+- [ ] Multi Language Support (currently only supports python submissions)
 - [x] Scaling the submission backend
 - [x] Decent Frontend
 - [x] Memory Limit and Time Limit

@@ -16,61 +16,70 @@ router.post('/', auth, async (req, res) => {
 });
 
 
-async function runTestcase(givenProblem, userSubmission){
-  for(let i=0; i<givenProblem.testcase.length; i++){
-    var mainQueue = 'codejudge';
-    var replyQueue = `${userSubmission.username}_${userSubmission.title}_t${i+1}`;
-    var problemData = {
-      id: `${userSubmission.username}_${userSubmission.title}_t${i+1}`,
+async function runTestcase(givenProblem, userSubmission) {
+  for (let i = 0; i < givenProblem.testcase.length; i++) {
+    const replyQueue = `${userSubmission.username}_${userSubmission.title}_t${i+1}`;
+    
+    await rmqChannel.assertQueue(replyQueue, { durable: false });
+    
+    const problemData = {
+      id: replyQueue,
       memlimit: givenProblem.memlimit,
       timelimit: givenProblem.timelimit,
       input: givenProblem.testcase[i].input,
       output: givenProblem.testcase[i].output,
       code: userSubmission.code,
-    }
+    };
 
-    await rmqChannel.assertQueue(mainQueue, {durable: false});
-    await rmqChannel.sendToQueue(mainQueue, Buffer.from(JSON.stringify(problemData)));
-    await rmqChannel.assertQueue(replyQueue, {durable: false})
+    const consumePromise = consumeMessage(replyQueue);
+    
+    await rmqChannel.sendToQueue('codejudge', Buffer.from(JSON.stringify(problemData)));
 
-    try{
-      const recvData = await consumeMessage(replyQueue);
-      if(recvData.status != "ACCEPTED"){
-        const submission = {
-          result: "",
-          log: "",
+    try {
+      const recvData = await consumePromise;
+      
+      if (recvData.status !== "ACCEPTED") {
+        return {
+          result: recvData.status,
+          log: recvData.status === "WRONG ANSWER" 
+            ? `Wrong answer at testcase ${i+1}`
+            : recvData.err,
           input: givenProblem.testcase[i].input,
           output: givenProblem.testcase[i].output,
           youroutput: recvData.useroutput,
-        }
-        if(recvData.status === "WRONG ANSWER"){
-          submission.result = "WRONG ANSWER";
-          submission.log =  `Wrong answer at testcase ${i+1}`;
-        }else{
-          submission.result = recvData.status;
-          submission.log = recvData.err;
-        }
-        return submission;
+        };
       }
-    }catch{
-      return {result: "SERVER ERROR", log: "Internal Server Error"};
+    } catch (error) {
+      console.error(`Error processing testcase ${i+1}:`, error);
+      return { result: "SERVER ERROR", log: "Internal Server Error" };
     }
   }
-  return {result: "ACCEPTED", log: "All Testcase Passed"}
+  
+  return { result: "ACCEPTED", log: "All Testcase Passed" };
 }
 
-async function consumeMessage(replyQueue){
+async function consumeMessage(replyQueue) {
   return new Promise((resolve, reject) => {
-    rmqChannel.consume(replyQueue, async (msg) => {
-      if(msg != null){
+    const timeoutId = setTimeout(() => {
+      cleanup();
+      reject(new Error("Timeout waiting for response"));
+    }, 100000);
+
+    const consumer = rmqChannel.consume(replyQueue, async (msg) => {
+      if (msg != null) {
+        cleanup();
         const recvData = JSON.parse(msg.content.toString());
         await rmqChannel.deleteQueue(replyQueue);
         resolve(recvData);
       }
-      else{
-        reject(new Error("No data available on replyQueue"));
+    }, { noAck: true });
+
+    function cleanup() {
+      clearTimeout(timeoutId);
+      if (consumer && consumer.consumerTag) {
+        rmqChannel.cancel(consumer.consumerTag).catch(console.error);
       }
-    }, {noAck: true});
+    }
   });
 }
 

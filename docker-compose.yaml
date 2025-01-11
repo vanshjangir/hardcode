@@ -17,11 +17,9 @@ services:
   judge:
     image: judge
     build:
-      context: ./codejudge/
+      context: ./judge/
     networks:
       - hardcode-net
-    volumes:
-      - ./codejudge:/app
   
   client:
     image: client
