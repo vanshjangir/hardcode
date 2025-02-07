@@ -29,9 +29,17 @@ type JudgeResult struct {
 }
 
 func main() {
-    conn, err := amqp.Dial("amqp://rabbitmq")
-    if err != nil {
-        panic(fmt.Sprintf("Failed to connect to RabbitMQ: %v", err))
+    var conn *amqp.Connection
+    var err error
+    for {
+        conn, err = amqp.Dial("amqp://rabbitmq")
+        if err != nil {
+            fmt.Println("Failed to connect to RabbitMQ: ", err)
+            fmt.Println("Trying again in 10 sec...")
+            time.Sleep(10*time.Second)
+        } else {
+            break
+        }
     }
     defer conn.Close()
 

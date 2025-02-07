@@ -16,6 +16,9 @@ services:
   
   judge:
     image: judge
+    deploy:
+      mode: replicated
+      replicas: 2
     build:
       context: ./judge/
     networks:

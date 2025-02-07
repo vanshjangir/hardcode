@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hc-client-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hc-client
+  template:
+    metadata:
+      labels:
+        app: hc-client
+    spec:
+      containers:
+      - name: hc-client-container
+        image: vanshjangir/hc:client
+        ports:
+        - containerPort: 5173
+
+---
